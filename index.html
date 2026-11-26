@@ -85,6 +85,9 @@ h3{font-size:13px;text-transform:none;color:var(--mute);margin:16px 20px 6px;fon
 #loginbox[hidden],#senhabox[hidden],.auth[hidden]{display:none}#loginbox input,#senhabox input{font-size:16px;padding:8px;border-radius:8px;border:0}
 #loginbox .meta,#senhabox .meta,#loginbox label,#senhabox label{color:#fff;opacity:.85}
 .auth .btn.pri{background:#fff;color:var(--blueb)}
+.cam{flex:none;width:44px;height:40px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--blue);cursor:pointer;display:grid;place-items:center}
+.prev{margin:8px 0;display:grid;gap:6px;justify-items:start}.prev img{max-width:100%;max-height:260px;border-radius:8px;border:1px solid var(--line)}
+.cm .act .sp{flex:1}
 .list{padding:20px max(3vw,16px) 40px}
 .list h2{font-size:18px;margin:0 0 10px}
 table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);font-size:14px}
@@ -137,6 +140,7 @@ td.num{text-align:right;white-space:nowrap}
   <table class="stack"><thead><tr><th>Setor</th><th>Etapa atual</th><th>Progresso</th><th class="num">NC</th><th>Situação</th></tr></thead><tbody id="tb"></tbody></table>
 </section>
 <input type="file" id="file" accept="image/*" hidden>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="dados.js"></script>
