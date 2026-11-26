@@ -12,7 +12,7 @@ const $=id=>document.getElementById(id);
 document.title=O.tituloCurto||document.title;$('ttl').textContent=O.titulo;$('sub').textContent=O.subtitulo;
 
 let LIB={},CMS=[],canWrite=false,names={};
-let view=VIEWS[0].id,sel=null,mode='geral',vb=null,pendFile=null,pendUrl='',draft={t:'',v:''};
+let view=VIEWS[0].id,sel=null,mode='geral',vb=null,pendFile=null,pendUrl='',draft={t:'',v:''},pf='',pAll=false,LB=null;
 const H=location.hash.slice(1);if(byId[H]){sel=H;view=byId[H].v}
 
 function rec(sid,vid){return LIB[sid+'__'+vid]||{}}
@@ -30,6 +30,7 @@ function colorOf(s){
 }
 function progBar(i,cls){const w=x=>(x/i.t*100).toFixed(1)+'%';
   return `<div class="${cls}"><span style="width:${w(i.c)};background:var(--c)"></span><span style="width:${w(i.na)};background:var(--na)"></span><span style="width:${w(i.nc)};background:var(--nc)"></span></div>`}
+const svcName=id=>(SVC.find(v=>v.id===id)||{}).n||'';
 const who=b=>esc(API.textNames?(b||''):(names[b]||''));
 
 function renderKpis(){
@@ -60,25 +61,34 @@ function renderSide(){
   if(!sel){el.innerHTML=`<div class="empty"><h2>Selecione um setor no mapa</h2><p>Toque em um ambiente colorido (ou na bolinha, nos ambientes pequenos) para ver a etapa em que está, liberar os serviços como <b>C</b> (conforme), <b>NC</b> (não conforme) ou <b>NA</b> (não aplicável) e registrar comentários e fotos.</p><p>Arraste para mover a planta; use a roda do mouse, o gesto de pinça ou os botões + e − para aproximar.</p></div>`;return}
   const s=byId[sel],i=info(s),[sn,sc]=SIT[i.sit],ids=[];
   const dis=canWrite?'':'disabled';
+  const all=CMS.filter(c=>c.s===s.id).sort((a,b)=>b.at-a.at),photos=all.filter(c=>c.f&&API.photoUrl(c.f));
+  const nf=id=>photos.filter(c=>c.v===id).length;
   const svcHtml=svcsOf(s).map(v=>{const r=rec(s.id,v.id);ids.push(r.by);
     return `<div class="svc${r.st==='NC'?' isnc':''}" data-v="${v.id}"><div class="row"><div class="nm">${esc(v.n)}<small>${esc(v.c)}</small></div>
     ${canWrite&&API.canUpload?`<button class="cam" data-cam="${v.id}" aria-label="Tirar foto de ${esc(v.n)}" title="Tirar foto deste serviço"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M9 4 7.2 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.2L15 4H9Zm3 4.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/></svg></button>`:''}<div class="seg" role="group" aria-label="Resultado ${esc(v.n)}">${['C','NC','NA'].map(k=>`<button data-st="${k}" ${r.st===k?`data-on="${k}"`:''} aria-pressed="${r.st===k}" ${dis}>${k}</button>`).join('')}</div></div>
     <input type="text" data-obs placeholder="Observação${r.st==='NC'?' — descreva a não conformidade':''}" value="${esc(r.obs||'')}" ${dis}>
-    ${r.at?`<div class="who">${r.st?esc(r.st)+' · ':''}${who(r.by)} ${fmt(r.at)}</div>`:''}</div>`}).join('');
-  const feed=CMS.filter(c=>c.s===s.id).sort((a,b)=>b.at-a.at);feed.forEach(c=>ids.push(c.by));
+    ${r.at||nf(v.id)?`<div class="who">${r.at?`${r.st?esc(r.st)+' · ':''}${who(r.by)} ${fmt(r.at)}`:''}${nf(v.id)?` <button class="lnk" data-pf="${v.id}">${nf(v.id)} foto${nf(v.id)>1?'s':''}</button>`:''}</div>`:''}</div>`}).join('');
+  const feed=all.filter(c=>c.k!=='status');const hist=all.filter(c=>c.k==='status');all.forEach(c=>ids.push(c.by));
+  const shown=photos.filter(c=>!pf||c.v===pf||(pf==='geral'&&!c.v)),lim=pAll?shown.length:8;
+  const opts=[['','Todas as fotos do ambiente',photos.length],...(photos.some(c=>!c.v)?[['geral','Ambiente em geral',photos.filter(c=>!c.v).length]]:[]),...svcsOf(s).map(v=>[v.id,v.n,nf(v.id)]).filter(o=>o[2])];
+  const gal=photos.length?`<div class="gal-f"><label class="meta" for="pf">Mostrar</label><select id="pf">${opts.map(([k,n,c])=>`<option value="${k}" ${pf===k?'selected':''}>${esc(n)} (${c})</option>`).join('')}</select></div>
+   <div class="gal">${shown.slice(0,lim).map(c=>`<button class="th" data-lb="${CMS.indexOf(c)}" aria-label="Abrir foto"><img src="${esc(API.photoUrl(c.f))}" alt="" loading="lazy">${c.v?`<span>${esc(svcName(c.v))}</span>`:''}</button>`).join('')}</div>
+   ${shown.length>lim?`<button class="btn" id="pall">Ver todas (${shown.length})</button>`:''}`:`<p class="meta">Nenhuma foto ainda. Use o botão de câmera ao lado de cada serviço ou "Tirar foto" nos comentários.</p>`;
   el.innerHTML=`<div class="head"><div class="meta">${esc(VIEWS.find(v=>v.id===s.v).n)} · ${String(s.a).replace('.',',')} m²</div><h2>${esc(s.n)}</h2>
    <span class="pill" style="background:${sc}">${sn}</span>
    <div class="etapa">Etapa atual: <b>${i.et?esc(i.et.n):'Todos os serviços liberados'}</b></div>
    ${progBar(i,'prog')}<div class="counts"><span>${i.c} C</span><span>${i.nc} NC</span><span>${i.na} NA</span><span>${i.p} pendentes</span><span>${i.pct}% liberado</span></div></div>
+   <h3 id="fotos">Fotos (${photos.length})</h3><div class="pics">${gal}</div>
    <h3>Liberação dos serviços (na ordem de execução)</h3>${svcHtml}
    <h3>Comentários e fotos</h3><div class="cm">
    <label class="meta" for="csvc">Sobre</label> <select id="csvc"><option value="">O setor todo</option>${svcsOf(s).map(v=>`<option value="${v.id}" ${draft.v===v.id?'selected':''}>${esc(v.n)}</option>`).join('')}</select>
    ${pendUrl?`<div class="prev"><img src="${pendUrl}" alt="Foto a enviar"><button class="btn" id="rmfoto">Remover foto</button></div>`:''}
    <textarea id="ctx" placeholder="${pendUrl?'Descreva a foto (opcional)…':'Escreva um comentário…'}" aria-label="Comentário" ${dis}>${esc(draft.t)}</textarea>
    <div class="act">${canWrite&&API.canUpload?'<button class="btn" id="tirar">Tirar foto</button><button class="btn" id="foto">Da galeria</button>':''}<span class="sp"></span><button class="btn pri" id="send" ${dis}>Enviar</button><span class="meta" id="fname"></span></div>
-   <ul class="feed">${feed.map(c=>{const u=API.photoUrl(c.f);return `<li><div class="t">${c.v?`<span class="tag">${esc((SVC.find(v=>v.id===c.v)||{}).n||'')}</span>`:''}${who(c.by)} · ${fmt(c.at)}</div>
-     ${c.k==='status'?`<div>Marcou <b style="color:${COL[c.st]||'var(--mute)'}">${esc(c.st||'pendente')}</b>${c.t?' — '+esc(c.t):''}</div>`:`<div>${esc(c.t)}</div>`}
-     ${u?`<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(u)}" alt="Foto anexada" loading="lazy"></a>`:''}</li>`}).join('')||'<li class="meta">Nenhum comentário ainda.</li>'}</ul></div>`;
+   <ul class="feed">${feed.map(c=>{const u=API.photoUrl(c.f);return `<li><div class="t">${c.v?`<span class="tag">${esc(svcName(c.v))}</span>`:''}${who(c.by)} · ${fmt(c.at)}</div>
+     ${c.t?`<div>${esc(c.t)}</div>`:''}
+     ${u?`<button class="th sm" data-lb="${CMS.indexOf(c)}" aria-label="Abrir foto"><img src="${esc(u)}" alt="" loading="lazy"></button>`:''}</li>`}).join('')||'<li class="meta">Nenhum comentário ainda.</li>'}</ul>
+   ${hist.length?`<details class="hist"><summary>Histórico de liberações (${hist.length})</summary><ul class="feed">${hist.map(c=>`<li><div class="t">${c.v?`<span class="tag">${esc(svcName(c.v))}</span>`:''}${who(c.by)} · ${fmt(c.at)}</div><div>Marcou <b style="color:${COL[c.st]||'var(--mute)'}">${esc(c.st||'pendente')}</b>${c.t?' — '+esc(c.t):''}</div></li>`).join('')}</ul></details>`:''}</div>`;
   API.loadNames&&API.loadNames(ids);
 }
 function renderAll(){renderKpis();renderTabs();renderMap();renderTable();renderSide();renderLegend()}
@@ -114,7 +124,7 @@ async function sendComment(){
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;view=b.dataset.v;vb=null;sel=null;renderAll()});
 $('mode').addEventListener('change',e=>{mode=e.target.value;renderMap();renderLegend()});
 $('tb').addEventListener('click',e=>{const r=e.target.closest('tr');if(r)select(r.dataset.id,true)});
-function select(id,scroll){if(id!==sel){draft={t:'',v:''};clearPhoto()}sel=id;const s=byId[id];if(s.v!==view){view=s.v;vb=null}renderAll();
+function select(id,scroll){if(id!==sel){draft={t:'',v:''};clearPhoto();pf='';pAll=false}sel=id;const s=byId[id];if(s.v!==view){view=s.v;vb=null}renderAll();
   try{history.replaceState(null,'','#'+id)}catch(e){}
   if(scroll&&matchMedia('(max-width:900px)').matches)$('side').scrollIntoView({behavior:'smooth'});
   else if(scroll)window.scrollTo({top:0,behavior:'smooth'})}
@@ -125,8 +135,21 @@ $('side').addEventListener('click',e=>{
   if(e.target.id==='tirar'){draft.v=$('csvc').value;$('cam').click()}
   if(e.target.id==='foto'){draft.v=$('csvc').value;$('file').click()}
   if(e.target.id==='rmfoto'){clearPhoto();renderSide()}
+  const pfb=e.target.closest('[data-pf]');if(pfb){pf=pfb.dataset.pf;pAll=false;renderSide();$('fotos').scrollIntoView({behavior:'smooth'});return}
+  if(e.target.id==='pall'){pAll=true;renderSide();return}
+  const th=e.target.closest('[data-lb]');if(th){const c=CMS[+th.dataset.lb];const s=byId[sel];
+    const list=CMS.filter(x=>x.s===s.id&&x.f&&API.photoUrl(x.f)).sort((a,b)=>b.at-a.at).filter(x=>!th.closest('.gal')||!pf||x.v===pf||(pf==='geral'&&!x.v));
+    LB={list,i:Math.max(0,list.indexOf(c))};showLB()}
 });
 $('side').addEventListener('change',e=>{if(e.target.matches('[data-obs]'))setObs(sel,e.target.closest('.svc').dataset.v,e.target.value.trim())});
+$('side').addEventListener('change',e=>{if(e.target.id==='pf'){pf=e.target.value;pAll=false;renderSide()}});
+function showLB(){const c=LB.list[LB.i];if(!c)return;$('lb').hidden=false;$('lbimg').src=API.photoUrl(c.f);
+  $('lbcap').textContent=[c.v?svcName(c.v):'Ambiente em geral',c.t,(API.textNames?c.by:names[c.by])||'',fmt(c.at)].filter(Boolean).join(' · ');
+  $('lbn').textContent=(LB.i+1)+' de '+LB.list.length;$('lbprev').disabled=LB.i<=0;$('lbnext').disabled=LB.i>=LB.list.length-1;$('lbopen').href=API.photoUrl(c.f);$('lbclose').focus()}
+function closeLB(){$('lb').hidden=true;$('lbimg').src='';LB=null}
+$('lbclose').onclick=closeLB;$('lbprev').onclick=()=>{LB.i--;showLB()};$('lbnext').onclick=()=>{LB.i++;showLB()};
+$('lb').addEventListener('click',e=>{if(e.target.id==='lb')closeLB()});
+document.addEventListener('keydown',e=>{if(!LB)return;if(e.key==='Escape')closeLB();if(e.key==='ArrowLeft'&&LB.i>0){LB.i--;showLB()}if(e.key==='ArrowRight'&&LB.i<LB.list.length-1){LB.i++;showLB()}});
 $('side').addEventListener('input',e=>{if(e.target.id==='ctx')draft.t=e.target.value;if(e.target.id==='csvc')draft.v=e.target.value});
 function clearPhoto(){if(pendUrl)URL.revokeObjectURL(pendUrl);pendUrl='';pendFile=null}
 // reduz a foto do celular (5-10 MB) para ~300-600 KB, maior lado 1920 px

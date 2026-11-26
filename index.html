@@ -88,6 +88,19 @@ h3{font-size:13px;text-transform:none;color:var(--mute);margin:16px 20px 6px;fon
 .cam{flex:none;width:44px;height:40px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--blue);cursor:pointer;display:grid;place-items:center}
 .prev{margin:8px 0;display:grid;gap:6px;justify-items:start}.prev img{max-width:100%;max-height:260px;border-radius:8px;border:1px solid var(--line)}
 .cm .act .sp{flex:1}
+.pics{padding:0 20px 6px}.gal-f{display:flex;gap:8px;align-items:center;margin-bottom:8px}.gal-f select{flex:1;font-size:14px;padding:6px 8px}
+.gal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:8px}
+.th{position:relative;padding:0;border:0;border-radius:6px;overflow:hidden;aspect-ratio:1;cursor:pointer;background:var(--line);display:block;width:100%}
+.th img{width:100%;height:100%;object-fit:cover;display:block;margin:0;border-radius:0}
+.th span{position:absolute;left:0;right:0;bottom:0;background:#000a;color:#fff;font-size:10.5px;padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
+.th.sm{width:120px;margin-top:6px}
+.lnk{font:inherit;font-size:12px;color:var(--blue);background:none;border:0;padding:0 2px;text-decoration:underline;cursor:pointer;min-height:24px}
+.hist{margin-top:14px}.hist summary{cursor:pointer;color:var(--mute);font-size:13px;padding:6px 0}
+.lb{position:fixed;inset:0;background:#0b0b0bf5;z-index:50;display:grid;place-items:center;padding:12px}.lb[hidden]{display:none}
+.lbbox{max-width:min(1200px,100%);max-height:100%;display:grid;gap:8px;grid-template-rows:minmax(0,1fr) auto}
+.lbbox img{max-width:100%;max-height:calc(100vh - 120px);object-fit:contain;margin:auto;border-radius:6px}
+.lbbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:#fff;font-size:14px}.lbbar .sp{flex:1}.lbbar .meta{color:#ccc}
+.lbbar .btn{background:#222;color:#fff;border-color:#555;text-decoration:none;display:inline-flex;align-items:center}.lbbar .btn.pri{background:#fff;color:#111}
 .list{padding:20px max(3vw,16px) 40px}
 .list h2{font-size:18px;margin:0 0 10px}
 table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);font-size:14px}
@@ -139,6 +152,8 @@ td.num{text-align:right;white-space:nowrap}
   <h2 id="lt">Setores</h2>
   <table class="stack"><thead><tr><th>Setor</th><th>Etapa atual</th><th>Progresso</th><th class="num">NC</th><th>Situação</th></tr></thead><tbody id="tb"></tbody></table>
 </section>
+<div id="lb" class="lb" hidden role="dialog" aria-label="Foto"><div class="lbbox"><img id="lbimg" alt="Foto do ambiente"><div class="lbbar"><span id="lbcap"></span><span class="sp"></span><span id="lbn" class="meta"></span>
+<button class="btn" id="lbprev" aria-label="Foto anterior">‹</button><button class="btn" id="lbnext" aria-label="Próxima foto">›</button><a class="btn" id="lbopen" target="_blank" rel="noopener">Abrir original</a><button class="btn pri" id="lbclose">Fechar</button></div></div></div>
 <input type="file" id="file" accept="image/*" hidden>
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
 <script src="config.js"></script>
