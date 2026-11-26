@@ -178,7 +178,7 @@ const ClaudeAPI={canUpload:false,
 // Supabase (site externo)
 const SupaAPI={textNames:true,canUpload:true,
   async start(){
-    const C=window.SUPABASE_CONFIG;const sb=window.supabase.createClient(C.url,C.anonKey);this.sb=sb;this.C=C;
+    const fromLink=/type=(magiclink|recovery|signup|invite)/.test(location.hash);const C=window.SUPABASE_CONFIG;const sb=window.supabase.createClient(C.url,C.anonKey);this.sb=sb;this.C=C;
     $('auth').hidden=false;
     const fromRow=r=>({s:r.setor,v:r.servico,st:r.st,obs:r.obs||'',by:r.por,at:+r.em});
     const cRow=r=>({s:r.setor,v:r.servico,k:r.tipo,st:r.st,t:r.texto||'',f:r.foto,by:r.por,at:+r.em});
@@ -197,14 +197,25 @@ const SupaAPI={textNames:true,canUpload:true,
       if(this.email){const {data}=await sb.from('membros').select('nome').eq('email',this.email.toLowerCase()).maybeSingle();
         if(data){canWrite=true;this.nome=data.nome||this.email}else banner('Seu e-mail ('+this.email+') ainda não está cadastrado como membro da equipe. Peça acesso ao responsável.')}
       $('authtxt').textContent=this.email?(this.nome||this.email):'Somente leitura';
-      $('login').hidden=!!this.email;$('logout').hidden=!this.email;renderSide()};
-    sb.auth.onAuthStateChange((_e,s)=>setUser(s));
-    const {data:{session}}=await sb.auth.getSession();setUser(session);
+      $('login').hidden=!!this.email;$('logout').hidden=!this.email;$('defsenha').hidden=!this.email;$('loginbox').hidden=true;renderSide()};
+    sb.auth.onAuthStateChange((ev,s)=>{setUser(s);if(ev==='PASSWORD_RECOVERY')$('senhabox').hidden=false});
+    const {data:{session}}=await sb.auth.getSession();await setUser(session);if(session&&fromLink){$('senhabox').hidden=false;try{history.replaceState(null,'',location.pathname)}catch(e){}}
     $('login').onclick=()=>{$('loginbox').hidden=!$('loginbox').hidden;$('email').focus()};
-    $('logout').onclick=()=>sb.auth.signOut();
-    $('loginbox').onsubmit=async e=>{e.preventDefault();const em=$('email').value.trim();if(!em)return;
-      const {error}=await sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.href.split('#')[0]}});
-      $('loginmsg').textContent=error?'Não foi possível enviar: '+error.message:'Pronto! Abra o link enviado para '+em+' neste aparelho.'};
+    $('logout').onclick=()=>{$('senhabox').hidden=true;sb.auth.signOut()};
+    $('defsenha').onclick=()=>{$('senhabox').hidden=!$('senhabox').hidden;$('nova').focus()};
+    $('loginbox').onsubmit=async e=>{e.preventDefault();const em=$('email').value.trim(),pw=$('senha').value;
+      if(!pw){$('loginmsg').textContent='Digite a senha, ou use o botão de receber link por e-mail.';return}
+      $('loginmsg').textContent='Entrando…';
+      const {error}=await sb.auth.signInWithPassword({email:em,password:pw});
+      $('loginmsg').textContent=error?(/invalid/i.test(error.message)?'E-mail ou senha incorretos. Se ainda não criou senha, use o botão de receber link.':'Não foi possível entrar: '+error.message):''};
+    $('link').onclick=async()=>{const em=$('email').value.trim();if(!em){$('loginmsg').textContent='Digite seu e-mail primeiro.';return}
+      $('link').disabled=true;
+      const {error}=await sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.href.split('#')[0],shouldCreateUser:true}});
+      $('loginmsg').textContent=error?(/rate limit/i.test(error.message)?'Limite de e-mails atingido. Aguarde cerca de 1 hora e peça um único link.':'Não foi possível enviar: '+error.message):'Link enviado para '+em+'. Abra o e-mail neste mesmo aparelho e clique uma única vez; o link só funciona uma vez.';
+      setTimeout(()=>$('link').disabled=false,60000)};
+    $('senhabox').onsubmit=async e=>{e.preventDefault();const {error}=await sb.auth.updateUser({password:$('nova').value});
+      $('senhamsg').textContent=error?'Não foi possível salvar: '+error.message:'Senha salva! Da próxima vez entre com e-mail e senha, em qualquer aparelho.';
+      if(!error){$('nova').value='';setTimeout(()=>$('senhabox').hidden=true,3000)}};
   },
   me(){return this.nome||this.email},
   async setLib(key,d){const {error}=await this.sb.from('liberacoes').upsert({id:key,setor:d.s,servico:d.v,st:d.st,obs:d.obs,por:d.by,em:d.at});if(error)throw error},

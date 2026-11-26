@@ -81,9 +81,9 @@ h3{font-size:13px;text-transform:none;color:var(--mute);margin:16px 20px 6px;fon
 .top{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
 .auth{font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:360px}
 .auth .btn{background:transparent;color:#fff;border-color:#ffffff66}
-#loginbox{display:grid;gap:6px;width:100%;background:#ffffff14;padding:10px;border-radius:8px}
-#loginbox[hidden],.auth[hidden]{display:none}#loginbox input{font-size:16px;padding:8px;border-radius:8px;border:0}
-#loginbox .meta{color:#fff;opacity:.85}
+#loginbox,#senhabox{display:grid;gap:6px;width:100%;background:#ffffff14;padding:10px;border-radius:8px}
+#loginbox[hidden],#senhabox[hidden],.auth[hidden]{display:none}#loginbox input,#senhabox input{font-size:16px;padding:8px;border-radius:8px;border:0}
+#loginbox .meta,#senhabox .meta,#loginbox label,#senhabox label{color:#fff;opacity:.85}
 .auth .btn.pri{background:#fff;color:var(--blueb)}
 .list{padding:20px max(3vw,16px) 40px}
 .list h2{font-size:18px;margin:0 0 10px}
@@ -107,8 +107,14 @@ td.num{text-align:right;white-space:nowrap}
 <header>
   <div class="top"><div><h1 id="ttl"></h1>
   <p id="sub"></p></div>
-  <div id="auth" class="auth" hidden><span id="authtxt">Somente leitura</span> <button class="btn" id="login">Entrar</button><button class="btn" id="logout" hidden>Sair</button>
-  <form id="loginbox" hidden><label for="email">Seu e-mail</label><input type="email" id="email" autocomplete="email" required><button class="btn pri">Enviar link de acesso</button><div id="loginmsg" class="meta"></div></form></div></div>
+  <div id="auth" class="auth" hidden><span id="authtxt">Somente leitura</span> <button class="btn" id="login">Entrar</button><button class="btn" id="defsenha" hidden>Definir senha</button><button class="btn" id="logout" hidden>Sair</button>
+  <form id="loginbox" hidden><label for="email">E-mail</label><input type="email" id="email" autocomplete="email" required>
+  <label for="senha">Senha</label><input type="password" id="senha" autocomplete="current-password">
+  <button class="btn pri" id="entrar">Entrar com senha</button>
+  <button class="btn" type="button" id="link">Primeiro acesso / esqueci a senha: receber link por e-mail</button>
+  <div id="loginmsg" class="meta"></div></form>
+  <form id="senhabox" hidden><label for="nova">Crie uma senha (mín. 8 caracteres) para entrar sem precisar de e-mail</label><input type="password" id="nova" autocomplete="new-password" minlength="8" required>
+  <button class="btn pri">Salvar senha</button><div id="senhamsg" class="meta"></div></form></div></div>
   <div class="kpis" id="kpis"></div>
 </header>
 <div class="banner" id="banner"></div>
