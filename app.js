@@ -25,13 +25,15 @@ const svcName=id=>svcById[id]?.n||'';
 const label=(v,i)=>v?(code(v,i)+' '+svcName(v)+(i&&itemOf(v,i)?' › '+itemOf(v,i).n:'')):'Ambiente em geral';
 const viewName=id=>VIEWS.find(v=>v.id===id)?.n||'';
 const touch=matchMedia('(pointer:coarse)').matches;
-document.title=O.tituloCurto||'Mapa da Obra';$('ttl').textContent=O.titulo;
+document.title='Mapa da Obra'+(O.tituloCurto?' — '+O.tituloCurto:'');$('ttl').textContent=O.titulo;
 $('sub').innerHTML=(O.etiquetas||[O.subtitulo]).map(x=>`<span class="chip">${esc(x)}</span>`).join('');
 
 // ---------- estado ----------
 let LIB={},CMS=[],NCS={},REC={},canWrite=false,ME='',localImg={};
 let view=VIEWS[0].id,sel=null,mode='geral',filt='',vb=null,tab='mapa',draft={t:'',v:'',i:''},cmOpen=false,pf='',pAll=false,LB=null,open=new Set(),ncTab='ab';
 const H=location.hash.slice(1);if(byId[H]){sel=H;view=byId[H].v}
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const mqApp=matchMedia('(max-width:900px)');let APP=false,AT=byId[H]?'amb':'mapa';
 
 // ---------- cálculo de situação ----------
 const key=(s,v,i)=>s+'__'+v+'__'+i;
@@ -68,7 +70,8 @@ function renderKpis(){
   let lib=0,rc=0,t=0,ok=0;for(const s of SECTORS){const i=info(s);if(i.sit==='lib'||i.sit==='rec')lib++;if(i.sit==='rec')rc++;t+=i.t;ok+=i.c+i.na}
   const ab=ncList().filter(n=>n.status==='Aberta'),late=ab.filter(ncLate).length;
   $('kpis').innerHTML=[[`${lib} de ${SECTORS.length}`,`ambientes liberados${rc?` · ${rc} recebidos`:''}`,'ok'],[Math.round(ok/t*100)+'%','dos itens liberados (C + NA)',''],[ab.length,`NCs abertas${late?` · ${late} vencidas`:''}`,ab.length?'bad':''],[t-ok,'itens pendentes ou em NC','pd']]
-    .map(([b,s,c])=>`<div class="kpi ${c}"><b>${b}</b><span>${s}</span></div>`).join('')}
+    .map(([b,s,c])=>`<div class="kpi ${c}"><b>${b}</b><span>${s}</span></div>`).join('');
+  const bd=$('ncBdg');bd.hidden=!ab.length;bd.textContent=ab.length}
 function renderBar(){
   $('tabs').innerHTML=VIEWS.map(v=>`<button data-v="${v.id}" aria-pressed="${v.id===view}">${esc(v.n)}</button>`).join('');
   $('mode').innerHTML=`<option value="geral">Situação geral</option>`+SVC.map(v=>`<option value="${v.id}">${ixOf(v)}. ${esc(v.n)}</option>`).join('');$('mode').value=mode;
@@ -76,9 +79,10 @@ function renderBar(){
   if(filt==='pend'&&mode==='geral')filt='';
   $('filt').innerHTML=fo.map(([k,n])=>`<option value="${k}" ${k===filt?'selected':''}>${esc(n)}</option>`).join('');
   $('vMapa').setAttribute('aria-pressed',tab==='mapa');$('vPainel').setAttribute('aria-pressed',tab==='painel');
-  $('bLote').hidden=!canWrite}
+  $('bLote').hidden=!canWrite;
+  $('atName').textContent=O.tituloCurto||O.titulo;$('pl').innerHTML=VIEWS.map(v=>`<option value="${v.id}" ${v.id===view?'selected':''}>${esc(v.n)}</option>`).join('')}
 function renderLegend(){
-  $('legend').innerHTML='<div class="legend">'+(mode==='geral'?Object.values(SIT).map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join(''):
+  $('legend').innerHTML=(APP?'<button class="lgb" data-lg>Legenda ▾</button>':'')+'<div class="legend">'+(mode==='geral'?Object.values(SIT).map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join(''):
    ['C','NC','NA','P',''].map(k=>`<span><i style="background:${COL[k]}"></i>${STN[k]}</span>`).join(''))+'</div>'}
 function renderMap(){
   const V=VIEWS.find(v=>v.id===view);if(!vb)vb=[...V.b];
@@ -143,7 +147,7 @@ function renderSide(){
      <span class="stb" style="background:${COL[x.st]}">${STN[x.st]}</span><span class="chev" aria-hidden="true"></span>${bar(x,'mini')}</button>${body}</div>`}).join('');
   const opts=svcsOf(s).map(v=>`<optgroup label="${ixOf(v)}. ${esc(v.n)}"><option value="${v.id}|" ${draft.v===v.id&&!draft.i?'selected':''}>${esc(v.n)} — geral</option>${v.itens.map((it,k)=>`<option value="${v.id}|${it.id}" ${draft.v===v.id&&draft.i===it.id?'selected':''}>${ixOf(v)}.${k+1} ${esc(it.n)}</option>`).join('')}</optgroup>`).join('');
   const feed=all.filter(c=>c.k!=='status'),hist=all.filter(c=>c.k==='status');
-  el.innerHTML=`<div class="head"><div class="meta">${esc(viewName(s.v))} · ${String(s.a).replace('.',',')} m²</div><h2>${esc(s.n)}</h2>
+  el.innerHTML=`<div class="abk"><button data-back>‹ Mapa</button><span>${esc(s.n)}</span></div><div class="head"><div class="meta">${esc(viewName(s.v))} · ${String(s.a).replace('.',',')} m²</div><h2>${esc(s.n)}</h2>
    <span class="pill" style="background:${sc}">${sn}</span>
    <div class="etapa">Etapa atual: <b>${I.et?`${esc(I.et.n)}${I.eti?' › '+esc(I.eti.et)+': '+esc(I.eti.n):''}`:'Todos os serviços liberados'}</b></div>
    ${bar(I,'prog')}<div class="counts"><span>${I.c} C</span><span>${I.nc} NC</span><span>${I.na} NA</span><span>${I.p} pendentes</span><span>${I.pct}% liberado</span></div>
@@ -159,7 +163,27 @@ function renderSide(){
    <ul class="feed">${feed.map(c=>`<li><div class="t">${c.v?`<span class="tag">${esc(label(c.v,c.i))}</span>`:''}${c.fase?`<span class="tag">${c.fase==='antes'?'NC':'Correção'}</span>`:''}${esc(c.by||'')} · ${fmt(c.at)}</div>
      ${c.t?`<div>${esc(c.t)}</div>`:''}${c.f&&photoUrl(c.f)?thumb(c,'sm'):''}</li>`).join('')||'<li class="meta">Nenhum comentário ainda.</li>'}</ul>
    ${hist.length?`<details class="hist"><summary>Histórico de liberações (${hist.length})</summary><ul class="feed">${hist.map(c=>`<li><div class="t">${c.v?`<span class="tag">${esc(label(c.v,c.i))}</span>`:''}${esc(c.by||'')} · ${fmt(c.at)}</div><div>Marcou <b style="color:${COL[c.st]||'var(--mute)'}">${esc(c.st||'pendente')}</b>${c.t?' — '+esc(c.t):''}</div></li>`).join('')}</ul></details>`:''}</div>`}
-function renderAll(){renderKpis();renderBar();if(tab==='mapa'){renderMap();renderLeft();renderSide();renderLegend()}else renderPainel()}
+function renderAll(){renderKpis();renderBar();
+  if(APP){renderMap();renderLeft();renderSide();renderLegend();renderPeek();if(AT==='painel')renderPainel();return}
+  if(tab==='mapa'){renderMap();renderLeft();renderSide();renderLegend()}else renderPainel()}
+function renderPeek(){const p=$('peek');if(!APP||AT!=='mapa'||!sel){p.hidden=true;return}const s=byId[sel],I=info(s),[sn,sc]=SIT[I.sit];
+  p.hidden=false;p.innerHTML=`<b>${esc(s.n)}</b><button class="btn pri open" data-goamb>Abrir ›</button><div><span class="pill" style="background:${sc}">${sn}</span> <span class="meta">${I.pct}% liberado${I.nc?` · <b style="color:var(--nc)">${I.nc} NC</b>`:''}</span></div>${bar(I,'mini')}`}
+$('peek').addEventListener('click',e=>{if(e.target.closest('[data-goamb]')||e.target.closest('#peek'))setAt('amb')});
+function setAt(x){AT=x;document.body.dataset.at=x;document.querySelectorAll('#appnav [data-at]').forEach(b=>b.setAttribute('aria-current',b.dataset.at===x));
+  if(x==='painel')renderPainel();renderPeek();if(x==='mapa'){renderMap()}window.scrollTo(0,0)}
+$('legend').addEventListener('click',e=>{if(e.target.closest('[data-lg]'))$('legend').classList.toggle('open')});
+$('appnav').addEventListener('click',e=>{const b=e.target.closest('[data-at]');if(b)setAt(b.dataset.at)});
+// move elementos entre o layout do site e o do app
+const HOME={};['obx','auth','kpis','gMode','gFilt','gAct'].forEach(id=>{const n=$(id);HOME[id]=[n.parentNode,n.nextSibling]});
+function buildMais(){if($('mAuth'))return;$('mais').innerHTML=`<div class="mcard"><h2>Conta</h2><div id="mAuth"></div></div>
+  <div class="mcard"><h2>Obra</h2><b>${esc(O.titulo)}</b><div class="chips">${(O.etiquetas||[]).map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div></div>
+  <div class="mcard"><h2>Mapa</h2><div id="mExib" style="display:grid;gap:10px"></div></div>
+  <div class="mcard"><h2>Ações</h2><div id="mAct"></div>${isStandalone()?'':'<button class="btn" id="mInst">Instalar app</button>'}</div>`;
+  const mi=$('mInst');if(mi)mi.onclick=()=>$('inst').click()}
+function applyLayout(){const app=mqApp.matches||(isStandalone()&&matchMedia('(max-width:1100px)').matches);if(app===APP)return;APP=app;document.body.classList.toggle('app',app);
+  if(app){buildMais();$('atSync').appendChild($('obx'));$('mAuth').appendChild($('auth'));$('pKpis').appendChild($('kpis'));$('mExib').append($('gMode'),$('gFilt'));$('mAct').appendChild($('gAct'));
+    $('main').hidden=false;$('painel').hidden=false;setAt(AT);renderAll()}
+  else{for(const id of ['gAct','gFilt','gMode','kpis','auth','obx']){const[p,n]=HOME[id];p.insertBefore($(id),n&&n.parentNode===p?n:null)}$('peek').hidden=true;setTab(tab)}}
 function banner(t){$('banner').textContent=t||'';$('banner').classList.toggle('on',!!t)}
 
 // =====================================================================
@@ -421,7 +445,7 @@ function repNC(secs,o){const ids=new Set(secs.map(s=>s.id));
 // =====================================================================
 function renderPainel(){
   const rows=SECTORS.filter(s=>s.v===view);
-  $('painel').innerHTML=`<div class="pcard"><h2>Evolução da obra</h2><p class="meta">Itens liberados (C + NA) acumulados, pela data da última marcação de cada item.</p><div class="fig" id="evo"><svg></svg></div></div>
+  $('pBody').innerHTML=`<div class="pcard" style="margin-bottom:14px"><h2>Evolução da obra</h2><p class="meta">Itens liberados (C + NA) acumulados, pela data da última marcação de cada item.</p><div class="fig" id="evo"><svg></svg></div></div>
    <div class="pcard"><h2>Serviço × Ambiente — ${esc(viewName(view))}</h2><p class="meta">Percentual de itens liberados de cada serviço. Toque numa célula para abrir o ambiente no serviço. "—" = serviço não existe no ambiente.</p>
    <div class="mx"><table><thead><tr><th>Ambiente</th>${SVC.map(v=>`<th title="${esc(v.n)}">${ixOf(v)}<br>${esc(v.n.split(/[ (]/)[0])}</th>`).join('')}<th>Total</th></tr></thead><tbody>
    ${rows.map(s=>{const I=info(s);return `<tr><td><b>${esc(s.n)}</b>${REC[s.id]?' <span class="tag">recebido</span>':''}</td>${SVC.map(v=>{if(!svcsOf(s).includes(v))return '<td class="meta">—</td>';const x=svcStat(s,v);
@@ -444,27 +468,33 @@ function setTab(t){tab=t;$('main').hidden=t!=='mapa';$('painel').hidden=t!=='pai
 //  Eventos
 // =====================================================================
 $('vMapa').onclick=()=>setTab('mapa');$('vPainel').onclick=()=>setTab('painel');
+$('pl').addEventListener('change',e=>{view=e.target.value;vb=null;renderAll()});
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;view=b.dataset.v;vb=null;renderAll()});
 $('mode').addEventListener('change',e=>{mode=e.target.value;renderAll()});
 $('filt').addEventListener('change',e=>{filt=e.target.value;renderAll()});
 $('bLote').onclick=openLote;$('bRel').onclick=()=>openRelDlg();
-$('painel').addEventListener('click',e=>{const c=e.target.closest('[data-cell]');if(!c)return;const[s,v]=c.dataset.cell.split('|');setTab('mapa');select(s,false);open.add(v);renderSide()});
+$('painel').addEventListener('click',e=>{const c=e.target.closest('[data-cell]');if(!c)return;const[s,v]=c.dataset.cell.split('|');if(!APP)setTab('mapa');select(s,false);open.add(v);if(APP)setAt('amb');renderSide()});
 $('left').addEventListener('click',e=>{
   const t=e.target.closest('[data-nct]');if(t){ncTab=t.dataset.nct;renderLeft();return}
   const n=e.target.closest('[data-nc]');if(n){const[s,v,i]=n.dataset.nc.split('|');goItem(s,v,i);return}
   const b=e.target.closest('.setl [data-id]');if(b)select(b.dataset.id,true)});
-function goItem(s,v,i){select(s,false);open.add(v);renderSide();
+function goItem(s,v,i){select(s,false);open.add(v);if(APP)setAt('amb');renderSide();
   const el=$('it-'+v+'-'+i);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('flash')}}
 function select(id,scroll){if(PN.r){PN.r=false;applyPN()}if(id!==sel){draft={t:'',v:'',i:''};cmOpen=false;pf='';pAll=false;open=new Set()}sel=id;const s=byId[id];if(s.v!==view){view=s.v;vb=null}renderAll();
   try{history.replaceState(null,'','#'+id)}catch(e){}
+  if(APP){if(scroll)setAt('amb');return}
   if(scroll)(matchMedia('(max-width:900px)').matches?$('side'):document.body).scrollIntoView({behavior:'smooth'})}
 $('side').addEventListener('click',e=>{
+  if(e.target.closest('[data-back]')){setAt('mapa');return}
   const b=e.target.closest('.seg button');if(b){const it=b.closest('.it'),v=it.dataset.v,i=it.dataset.i;
     const before=rec(sel,v,i).st,hadNC=!!ncOpen(sel,v,i);
     // abre a câmera já no toque (precisa ser no mesmo clique)
     const willNC=b.dataset.st==='NC'&&before!=='NC'&&!hadNC,willFix=b.dataset.st==='C'&&hadNC;
     if(touch&&(willNC||willFix))capture({s:sel,v,i,fase:willNC?'antes':'depois'},true);
-    setStatus(sel,v,i,b.dataset.st);return}
+    setStatus(sel,v,i,b.dataset.st);
+    if(APP&&(b.dataset.st==='C'||b.dataset.st==='NA')&&rec(sel,v,i).st===b.dataset.st&&!willFix){const its=svcById[v].itens,k=its.findIndex(x=>x.id===i);
+      const nx=its.slice(k+1).find(x=>!rec(sel,v,x.id).st);if(nx)setTimeout(()=>{const el=$('it-'+v+'-'+nx.id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('flash')}},120)}
+    return}
   const tg=e.target.closest('[data-tog]');if(tg){const v=tg.dataset.tog;open.has(v)?open.delete(v):open.add(v);renderSide();return}
   const na=e.target.closest('[data-allna]');if(na){allNA(sel,na.dataset.allna);return}
   const cam=e.target.closest('[data-cam]');if(cam){const[v,i,f]=cam.dataset.cam.split('|');capture({s:sel,v,i,fase:f||(ncOpen(sel,v,i)?'antes':null)},true);return}
@@ -565,5 +595,6 @@ $('inst').onclick=async()=>{
   const c=$('cpy');if(c)c.onclick=()=>{navigator.clipboard.writeText(url).then(()=>c.textContent='copiado!',()=>{})}};
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 
-if(tab==='mapa')renderAll();
+applyLayout();mqApp.addEventListener('change',applyLayout);
+if(!APP)renderAll();
 }

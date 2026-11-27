@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Mapa da Obra</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#1F3864">
@@ -260,6 +260,70 @@ h3{font-size:13px;color:var(--mute);margin:16px 18px 8px;font-weight:600}
 .kpis{gap:6px;margin-top:8px}.kpi{min-width:0;flex:1 1 calc(50% - 6px);padding:5px 10px}.kpi b{font-size:18px}.kpi span{font-size:11.5px}
 .bar{gap:6px;padding:8px 10px}.bar .meta{display:none}.bar .grp{flex:1 1 calc(50% - 6px)}.bar select{max-width:none;width:100%}.bar .grp .btn{flex:1}
 .tabs{width:100%;flex-wrap:nowrap;overflow-x:auto}.tabs button{flex:none}}
+/* ===================== APP (celular) ===================== */
+#apptop,#appnav,#peek,#mais{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+body.app{padding:0;background:var(--bg)}
+body.app header,body.app .bar,body.app .instfab,body.app .banner{display:none!important}
+body.app .banner.on{display:block!important;position:fixed;left:0;right:0;top:calc(56px + env(safe-area-inset-top));z-index:21}
+body.app #apptop{display:flex;position:fixed;top:0;left:0;right:0;z-index:20;height:calc(56px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 12px 0;gap:10px;align-items:center;background:#1F3864;color:#fff;box-shadow:0 2px 8px #0003}
+#apptop .logo{width:34px;height:34px;border-radius:9px;background:#ffffff1f}
+.at-t{flex:1;display:grid;line-height:1.1}.at-t b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pl{all:unset;font-size:13px;color:#cfdaf0;cursor:pointer;padding-right:16px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23cfdaf0' stroke-width='1.6'/%3E%3C/svg%3E") right center no-repeat}
+#pl option{color:#111}
+#atSync .obx:not([hidden]){display:inline-block}
+body.app #appnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 10px #0001}
+#appnav button{all:unset;cursor:pointer;display:grid;justify-items:center;gap:2px;padding:7px 0 6px;font-size:11.5px;font-weight:600;color:#5d6674;position:relative;min-height:50px}
+#appnav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#appnav button[aria-current=true]{color:#1F3864}#appnav button[aria-current=true] svg{stroke-width:2.4}
+#appnav button[aria-current=true]::before{content:"";position:absolute;top:0;left:28%;right:28%;height:3px;border-radius:0 0 3px 3px;background:#1F3864}
+#appnav button:focus-visible{outline:3px solid #5b8def;outline-offset:-3px}
+.bdg{position:absolute;top:3px;left:calc(50% + 6px);background:var(--nc);color:#fff;font-size:10.5px;border-radius:99px;padding:0 5px;min-width:16px;text-align:center}
+.bdg[hidden]{display:none}
+body.app main{display:block!important}
+body.app main{padding-top:calc(56px + env(safe-area-inset-top))}
+body.app #painel{padding-top:calc(68px + env(safe-area-inset-top))!important}
+body.app main,body.app #painel{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+body.app #left,body.app .mapwrap,body.app aside,body.app #painel,body.app #mais{display:none!important}
+body.app[data-at=mapa] .mapwrap{display:block!important;position:fixed;top:calc(56px + env(safe-area-inset-top));bottom:calc(62px + env(safe-area-inset-bottom));left:0;right:0;height:auto;min-height:0;border:0}
+body.app[data-at=nc] #left{display:grid!important;padding:12px}
+body.app[data-at=amb] aside{display:block!important;min-height:calc(100vh - 130px)}
+body.app[data-at=painel] #painel{display:grid!important;padding-left:12px;padding-right:12px}
+body.app[data-at=mais] #mais{display:grid!important}
+body.app .tog{display:none}
+body.app .zoom{right:10px;top:10px}.body.app .zoom button{width:46px;height:46px}
+body.app .hint{top:10px;bottom:auto;left:10px;max-width:calc(100% - 80px);padding:0}
+.lgb{display:none}body.app .lgb{display:block;all:unset;cursor:pointer;font-size:13px;font-weight:600;color:#1F3864;padding:8px 12px}
+body.app .hint:not(.open) .legend{display:none}body.app .hint.open .legend{padding:0 10px 8px;font-size:12px}
+body.app .ncl{max-height:none}
+body.app #setcard .setl{max-height:none}
+body.app #peek:not([hidden]){display:grid;position:fixed;left:10px;right:10px;bottom:calc(72px + env(safe-area-inset-bottom));z-index:19;background:#fff;border-radius:14px;box-shadow:0 8px 24px #0b1a3340;padding:12px 14px;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;border:1px solid var(--line)}
+#peek b{font-size:16px}#peek .pill{margin:0 6px 0 0;font-size:12px}#peek .meta{white-space:nowrap}#peek .mini{grid-column:1/-1}
+#peek .open{grid-row:1/3;grid-column:2}
+/* ficha no app */
+.abk{display:none}
+body.app .abk{display:flex;position:sticky;top:calc(56px + env(safe-area-inset-top));z-index:5;background:#fff;border-bottom:1px solid var(--line);align-items:center;gap:6px;padding:6px 8px}
+.abk button{all:unset;cursor:pointer;display:flex;align-items:center;gap:4px;color:#1F3864;font-weight:600;font-size:15px;padding:8px;min-height:30px}
+.abk span{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.app .head{padding-top:12px}
+body.app .seg button{width:52px;height:46px;font-size:15px}
+body.app .cam{width:50px;height:46px}
+body.app .it{margin:8px 10px;padding:12px}
+body.app .it .row{flex-wrap:wrap}body.app .ctl{width:100%;justify-content:space-between}
+body.app .it input{font-size:16px;padding:9px 10px}
+body.app .sh{padding:13px 14px}
+body.app h3{margin-left:14px;margin-right:14px}
+body.app .pics,body.app .cm{padding-left:14px;padding-right:14px}
+.nxt{display:none}
+body.app .nxt{display:block;margin:4px 10px 0;text-align:right}
+/* mais */
+#mais{padding:calc(68px + env(safe-area-inset-top)) 12px calc(80px + env(safe-area-inset-bottom));gap:12px;align-content:start}
+.mcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:10px}
+.mcard h2{font-size:14px;margin:0;color:var(--mute);font-weight:600}
+.mcard .auth{max-width:none}
+.mcard .grp{display:grid;gap:4px}.mcard .grp .meta{display:block!important}.mcard select{width:100%;max-width:none!important}
+.mcard #gAct{display:grid;grid-template-columns:1fr;gap:8px}.mcard #gAct .btn{min-height:46px;font-size:15px}
+#pKpis .kpis{margin:0 0 12px}
 @media(prefers-reduced-motion:reduce){.sec,.sh .chev,.card>summary::after{transition:none}.it.flash{animation:none}}
 </style>
 </head>
@@ -282,11 +346,22 @@ h3{font-size:13px;color:var(--mute);margin:16px 18px 8px;font-weight:600}
   <div class="seg2" role="group" aria-label="Visualização"><button id="vMapa" aria-pressed="true">Mapa</button><button id="vPainel" aria-pressed="false">Painel</button></div>
   <div class="tabs" id="tabs" role="group" aria-label="Planta"></div>
   <span class="sp"></span>
-  <div class="grp"><label for="mode" class="meta">Colorir por</label><select id="mode"></select></div>
-  <div class="grp"><label for="filt" class="meta">Mostrar</label><select id="filt"></select></div>
-  <div class="grp"><button class="btn" id="bLote" hidden>Liberar em lote</button><button class="btn pri" id="bRel">Relatórios</button></div>
+  <div class="grp" id="gMode"><label for="mode" class="meta">Colorir por</label><select id="mode"></select></div>
+  <div class="grp" id="gFilt"><label for="filt" class="meta">Mostrar</label><select id="filt"></select></div>
+  <div class="grp" id="gAct"><button class="btn" id="bLote" hidden>Liberar em lote</button><button class="btn pri" id="bRel">Relatórios</button></div>
 </div>
-<section id="painel" hidden></section>
+<div id="apptop"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" d="M3 4h18v16H3zM3 11h8v9M11 4v4M15 11h6M15 11v9"/></svg></div>
+  <div class="at-t"><b id="atName"></b><label class="sr" for="pl">Planta</label><select id="pl"></select></div><span id="atSync"></span></div>
+<div id="peek" hidden></div>
+<section id="painel" hidden><div id="pKpis"></div><div id="pBody"></div></section>
+<section id="mais" hidden></section>
+<nav id="appnav" aria-label="Navegação do app">
+  <button data-at="mapa"><svg viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14"/></svg>Mapa</button>
+  <button data-at="nc"><svg viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Zm0 6v5m0 3v.5"/></svg>NCs<span class="bdg" id="ncBdg" hidden></span></button>
+  <button data-at="amb"><svg viewBox="0 0 24 24"><path d="M8 4h8v3H8zM6 5H4v16h16V5h-2M8 12h8M8 16h5"/></svg>Ambiente</button>
+  <button data-at="painel"><svg viewBox="0 0 24 24"><path d="M4 20V10m6 10V4m6 16v-7m4 7H2"/></svg>Painel</button>
+  <button data-at="mais"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Mais</button>
+</nav>
 <main id="main">
   <div id="left">
     <section class="card" id="nccard"></section>
@@ -313,9 +388,9 @@ h3{font-size:13px;color:var(--mute);margin:16px 18px 8px;font-weight:600}
 <button class="instfab" id="inst" aria-label="Instalar o app no celular ou computador"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>Instalar app</button>
 <input type="file" id="file" accept="image/*" multiple hidden>
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
-<script src="config.js?v=202611271150"></script>
+<script src="config.js?v=202611271202"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="dados.js?v=202611271150"></script>
-<script src="app.js?v=202611271150"></script>
+<script src="dados.js?v=202611271202"></script>
+<script src="app.js?v=202611271202"></script>
 </body>
 </html>

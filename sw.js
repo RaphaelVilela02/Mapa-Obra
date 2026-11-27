@@ -1,6 +1,6 @@
 // Mapa da Obra — funciona sem internet (arquivos do site e fotos já vistas ficam guardados)
-const V='mo-202611271150';
-const SHELL=['./','index.html','app.js?v=202611271150','dados.js?v=202611271150','config.js?v=202611271150','manifest.webmanifest','icone-192.png','casa01.webp','casa02t.webp','casa02p1.webp','casa03.webp',
+const V='mo-202611271202';
+const SHELL=['./','index.html','app.js?v=202611271202','dados.js?v=202611271202','config.js?v=202611271202','manifest.webmanifest','icone-192.png','casa01.webp','casa02t.webp','casa02p1.webp','casa03.webp',
  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
