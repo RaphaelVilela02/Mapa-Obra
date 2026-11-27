@@ -210,6 +210,7 @@ async function exec(op){let r;
 let pendingN=0,flushing=false,loaded=false;
 async function obCount(){const a=await obAll();pendingN=a?a.length:0;const b=$('obx');b.hidden=!pendingN;b.textContent=`${pendingN} envio${pendingN>1?'s':''} pendente${pendingN>1?'s':''}`;b.title='Será enviado quando a internet voltar'}
 async function send(op){
+  if(!canWrite){banner('Somente leitura: entre com uma conta da equipe para alterar.');return}
   const q=await obAll();
   if(!(q&&q.length)){try{await exec(op);return}catch(e){if(!isNet(e)){fail(e);return}}}
   await obAdd(op);await obCount();banner('Sem internet: as alterações ficam guardadas neste aparelho e serão enviadas automaticamente.')}
@@ -249,7 +250,7 @@ function realtime(){
 // =====================================================================
 //  Escrita
 // =====================================================================
-function setStatus(sid,vid,iid,st){
+function setStatus(sid,vid,iid,st){if(!canWrite)return;
   const k=key(sid,vid,iid),cur=LIB[k]||{};const nst=cur.st===st?null:st,now=Date.now();
   const doc={s:sid,v:vid,i:iid,st:nst,obs:cur.obs||'',by:ME,at:now};LIB[k]=doc;
   send({t:'upsert',tb:'liberacoes',rows:[{id:k,setor:sid,servico:vid,item:iid,st:nst,obs:doc.obs,por:ME,em:now}]});
@@ -261,13 +262,13 @@ function setStatus(sid,vid,iid,st){
   else if(nc&&(nst==='C'||nst==='NA')){const patch={status:'Resolvida',resolvida_em:now,reverificacao:today(),em:now};Object.assign(nc,patch);send({t:'update',tb:'ncs',id:nc.id,patch});if(nst==='C')ask='depois'}
   else if(nc&&!nst){delete NCS[nc.id];send({t:'delete',tb:'ncs',id:nc.id})}
   renderAll();return ask}
-function allNA(sid,vid){const v=svcById[vid],now=Date.now();
+function allNA(sid,vid){if(!canWrite)return;const v=svcById[vid],now=Date.now();
   const its=v.itens.filter(it=>!rec(sid,vid,it.id).st);if(!its.length)return;
   const rows=its.map(it=>{const k=key(sid,vid,it.id);LIB[k]={s:sid,v:vid,i:it.id,st:'NA',obs:'Não se aplica a este ambiente',by:ME,at:now};return{id:k,setor:sid,servico:vid,item:it.id,st:'NA',obs:'Não se aplica a este ambiente',por:ME,em:now}});
   send({t:'upsert',tb:'liberacoes',rows});
   const cm={id:uuid(),setor:sid,servico:vid,item:null,tipo:'status',st:'NA',texto:`Serviço não se aplica a este ambiente (${rows.length} itens)`,por:ME,em:now};CMS.push(cRow(cm));
   send({t:'upsert',tb:'comentarios',rows:[cm],ign:true});renderAll()}
-function setObs(sid,vid,iid,obs){
+function setObs(sid,vid,iid,obs){if(!canWrite)return;
   const k=key(sid,vid,iid),cur=LIB[k]||{};if((cur.obs||'')===obs)return;const now=Date.now();
   LIB[k]={s:sid,v:vid,i:iid,st:cur.st||null,obs,by:ME,at:now};
   send({t:'upsert',tb:'liberacoes',rows:[{id:k,setor:sid,servico:vid,item:iid,st:cur.st||null,obs,por:ME,em:now}]});
@@ -275,16 +276,16 @@ function setObs(sid,vid,iid,obs){
   renderLeft()}
 function setNC(id,field,val){const n=NCS[id];if(!n||(n[field]||'')===val)return;n[field]=val||(field==='prazo'?null:'');
   send({t:'update',tb:'ncs',id,patch:{[field]:n[field],em:Date.now()}});renderLeft();renderKpis()}
-function sendComment(){const t=($('ctx')?.value||'').trim();if(!t)return;
+function sendComment(){if(!canWrite)return;const t=($('ctx')?.value||'').trim();if(!t)return;
   const cm={id:uuid(),setor:sel,servico:draft.v||null,item:draft.i||null,tipo:'nota',texto:t,por:ME,em:Date.now()};CMS.push(cRow(cm));
   send({t:'upsert',tb:'comentarios',rows:[cm],ign:true});draft.t='';cmOpen=false;renderSide()}
-function sendPhoto(blob,ctx,note){
+function sendPhoto(blob,ctx,note){if(!canWrite)return;
   const d=new Date(),ymd=d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());
   const path=`${ctx.s}/${ctx.v||'geral'}${ctx.i?'-'+ctx.i:''}_${ymd}_${Date.now()}${ctx.fase?'_'+ctx.fase:''}.jpg`;
   localImg[path]=URL.createObjectURL(blob);
   const row={id:uuid(),setor:ctx.s,servico:ctx.v||null,item:ctx.i||null,tipo:'nota',texto:note||'',foto:path,fase:ctx.fase||null,por:ME,em:Date.now()};
   CMS.push(cRow(row));send({t:'photo',path,blob,row});renderSide();renderLeft()}
-async function delPhoto(c){CMS=CMS.filter(x=>x!==c);
+async function delPhoto(c){if(!canWrite)return;CMS=CMS.filter(x=>x!==c);
   if(c.t){CMS.push({...c,f:null});send({t:'update',tb:'comentarios',id:c.id,patch:{foto:null}})}else send({t:'delete',tb:'comentarios',id:c.id});
   send({t:'rmfile',path:c.f})}
 
@@ -340,7 +341,7 @@ function showLB(){const c=LB.list[LB.i];if(!c){closeLB();return}$('lb').hidden=f
   const d=$('lbdel');d.hidden=!canWrite;d.classList.remove('arm');d.textContent='Excluir foto';d.disabled=false;$('lbclose').focus()}
 function closeLB(){$('lb').hidden=true;$('lbimg').src='';LB=null}
 $('lbclose').onclick=closeLB;$('lbprev').onclick=()=>{LB.i--;showLB()};$('lbnext').onclick=()=>{LB.i++;showLB()};
-$('lbdel').onclick=()=>{const d=$('lbdel');if(!d.classList.contains('arm')){d.classList.add('arm');d.textContent='Confirmar exclusão';return}
+$('lbdel').onclick=()=>{if(!canWrite)return;const d=$('lbdel');if(!d.classList.contains('arm')){d.classList.add('arm');d.textContent='Confirmar exclusão';return}
   const c=LB.list[LB.i];delPhoto(c);LB.list.splice(LB.i,1);if(LB.i>=LB.list.length)LB.i--;renderSide();LB.list.length?showLB():closeLB()};
 $('lb').addEventListener('click',e=>{if(e.target.id==='lb')closeLB()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(LB)closeLB();else if(!$('dlg').hidden)closeDlg()}
