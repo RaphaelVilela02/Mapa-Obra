@@ -20,7 +20,7 @@
 :root{color-scheme:light;--bg:light-dark(#eef0f3,#0f1113);--panel:light-dark(#fff,#181b1f);--ink:light-dark(#151a21,#e8ebf0);--mute:light-dark(#5d6674,#97a0ad);--line:light-dark(#dfe3e8,#2a2f36);--soft:light-dark(#f6f7f9,#1e2227);
 --acc:light-dark(#1F3864,#9db8ea);--accb:light-dark(#1F3864,#2f5597);--c:#2e7d32;--nc:#c62828;--na:#8d939b;--pend:#d99a00;--ini:#a3b1c2}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Archivo,system-ui,sans-serif;overflow-x:clip}
+body{margin:0;padding-bottom:80px;background:var(--bg);color:var(--ink);font:15px/1.5 Archivo,system-ui,sans-serif;overflow-x:clip}
 button,select,input,textarea{font:inherit}
 button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #5b8def;outline-offset:1px}
 .btn{font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:8px 12px;min-height:40px;cursor:pointer}
@@ -253,6 +253,9 @@ h3{font-size:13px;color:var(--mute);margin:16px 18px 8px;font-weight:600}
 .paper .ph.three{grid-template-columns:repeat(3,1fr)}.paper .ph.three img{max-height:60mm}
 .paper .note{font-size:10px;color:#555;margin-top:6px}
 @media print{body>*:not(#rep){display:none!important}.rep{position:static;background:#fff;overflow:visible}.reptb{display:none}.paper{box-shadow:none;margin:0;padding:0;width:auto}}
+.instfab{position:fixed;right:16px;bottom:16px;z-index:30;display:flex;gap:8px;align-items:center;background:#1F3864;color:#fff;border:0;border-radius:99px;padding:12px 18px;font:600 15px Archivo,sans-serif;box-shadow:0 6px 18px #0b1a3355;cursor:pointer;min-height:48px}
+.instfab[hidden]{display:none}.instfab:focus-visible{outline:3px solid #5b8def;outline-offset:2px}
+.steps{margin:0;padding-left:20px;display:grid;gap:8px;color:var(--ink);font-size:15px}
 @media(max-width:600px){header{padding:12px 12px 8px}.logo{width:34px;height:34px}.logo svg{width:20px;height:20px}header h1{font-size:17px}.chips .chip:nth-child(n+3){display:none}
 .kpis{gap:6px;margin-top:8px}.kpi{min-width:0;flex:1 1 calc(50% - 6px);padding:5px 10px}.kpi b{font-size:18px}.kpi span{font-size:11.5px}
 .bar{gap:6px;padding:8px 10px}.bar .meta{display:none}.bar .grp{flex:1 1 calc(50% - 6px)}.bar select{max-width:none;width:100%}.bar .grp .btn{flex:1}
@@ -264,7 +267,7 @@ h3{font-size:13px;color:var(--mute);margin:16px 18px 8px;font-weight:600}
 <header>
   <div class="top"><div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" d="M3 4h18v16H3zM3 11h8v9M11 4v4M15 11h6M15 11v9"/><circle cx="18" cy="16" r="1.6" fill="#ff6b6b"/></svg></div>
   <div><h1 id="ttl"></h1><div class="chips" id="sub"></div></div></div>
-  <div id="auth" class="auth" hidden><span class="obx" id="obx" hidden></span><button class="btn" id="inst" hidden>Instalar app</button><span id="authtxt">Somente leitura</span><button class="btn" id="login">Entrar</button><button class="btn" id="defsenha" hidden>Definir senha</button><button class="btn" id="logout" hidden>Sair</button>
+  <div id="auth" class="auth" hidden><span class="obx" id="obx" hidden></span><span id="authtxt">Somente leitura</span><button class="btn" id="login">Entrar</button><button class="btn" id="defsenha" hidden>Definir senha</button><button class="btn" id="logout" hidden>Sair</button>
   <form id="loginbox" hidden><label for="email">E-mail</label><input type="email" id="email" autocomplete="email" required>
   <label for="senha">Senha</label><input type="password" id="senha" autocomplete="current-password">
   <button class="btn pri" id="entrar">Entrar com senha</button>
@@ -307,11 +310,12 @@ h3{font-size:13px;color:var(--mute);margin:16px 18px 8px;font-weight:600}
   <div class="edbot"><input type="text" id="ednote" placeholder="Descrição curta (opcional) — vai gravada na foto" maxlength="120" aria-label="Descrição"><button class="btn" id="edcancel">Cancelar</button><button class="btn" id="edall" hidden>Enviar todas sem marcar</button><button class="btn pri" id="edok">Enviar foto</button></div>
 </div>
 <div class="rep" id="rep" hidden><div class="reptb"><span class="t" id="rept"></span><button class="btn" id="repprint">Imprimir / salvar PDF</button><button class="btn" id="repclose">Fechar</button></div><div id="repbody"></div></div>
+<button class="instfab" id="inst" aria-label="Instalar o app no celular ou computador"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>Instalar app</button>
 <input type="file" id="file" accept="image/*" multiple hidden>
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
-<script src="config.js?v=202611271125"></script>
+<script src="config.js?v=202611271150"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="dados.js?v=202611271125"></script>
-<script src="app.js?v=202611271125"></script>
+<script src="dados.js?v=202611271150"></script>
+<script src="app.js?v=202611271150"></script>
 </body>
 </html>

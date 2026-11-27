@@ -546,8 +546,23 @@ async function setUser(session){
 })().catch(e=>{console.error(e);banner('Erro ao conectar ao banco de dados.')});
 
 // ---------- app instalável ----------
-let instEv=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();instEv=e;$('inst').hidden=false});
-$('inst').onclick=async()=>{if(!instEv)return;instEv.prompt();await instEv.userChoice;instEv=null;$('inst').hidden=true};
+const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+let instEv=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();instEv=e});
+addEventListener('appinstalled',()=>{$('inst').hidden=true});
+$('inst').hidden=standalone();
+$('inst').onclick=async()=>{
+  if(instEv){instEv.prompt();const r=await instEv.userChoice;instEv=null;if(r.outcome==='accepted')$('inst').hidden=true;return}
+  const ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const inapp=/FBAN|FBAV|Instagram|WhatsApp|Line\/|; wv\)|GSA\//.test(ua),and=/Android/.test(ua),safari=ios&&!/CriOS|FxiOS|EdgiOS/.test(ua);
+  const url=location.href.split('#')[0];
+  let body;
+  if(inapp)body=`<p style="margin:0">Você abriu o link dentro de outro aplicativo (WhatsApp, Instagram, e-mail…), que não permite instalar.</p><ol class="steps"><li>Toque nos <b>três pontinhos</b> ou no ícone de compartilhar desse aplicativo.</li><li>Escolha <b>Abrir no navegador</b> (${ios?'Safari':'Chrome'}).</li><li>Lá, toque de novo em <b>Instalar app</b>.</li></ol>`;
+  else if(ios&&!safari)body=`<p style="margin:0">No iPhone, só o <b>Safari</b> instala apps de sites.</p><ol class="steps"><li>Copie o endereço: <b>${esc(url)}</b> <button class="lnk" id="cpy">copiar</button></li><li>Abra o <b>Safari</b> e cole o endereço.</li><li>Toque em <b>Compartilhar</b> (quadrado com seta ↑) → <b>Adicionar à Tela de Início</b> → <b>Adicionar</b>.</li></ol>`;
+  else if(ios)body=`<ol class="steps"><li>Toque no botão <b>Compartilhar</b> (quadrado com seta ↑) na barra do Safari.</li><li>Role a lista e toque em <b>Adicionar à Tela de Início</b>.</li><li>Toque em <b>Adicionar</b>. O ícone azul do Mapa da Obra aparece na tela inicial.</li></ol>`;
+  else if(and)body=`<ol class="steps"><li>Toque nos <b>três pontinhos ⋮</b> no canto superior direito do Chrome.</li><li>Toque em <b>Instalar app</b> (ou <b>Adicionar à tela inicial</b>).</li><li>Confirme em <b>Instalar</b>.</li></ol><p class="meta" style="margin:0">Se não aparecer a opção, atualize o Chrome pela Play Store e abra o site de novo.</p>`;
+  else body=`<ol class="steps"><li>No Chrome ou Edge, clique no ícone de instalar na barra de endereço (um monitor com seta ↓), à direita do endereço.</li><li>Ou abra o menu ⋮ → <b>Transmitir, salvar e compartilhar</b> → <b>Instalar página como app</b>.</li></ol>`;
+  openDlg('Instalar o Mapa da Obra',body,'<button class="btn pri" id="instok">Entendi</button>');$('instok').onclick=closeDlg;
+  const c=$('cpy');if(c)c.onclick=()=>{navigator.clipboard.writeText(url).then(()=>c.textContent='copiado!',()=>{})}};
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 if(tab==='mapa')renderAll();
