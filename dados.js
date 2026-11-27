@@ -1,5 +1,6 @@
-// Dados da obra: plantas, serviços (na ordem de execução) e setores.
+// Dados da obra: plantas, serviços (na ordem de execução) com seus itens de verificação, e setores.
 // Coordenadas em pontos da prancha PDF (1 m = 28,35 pt na escala 1:100).
+// Nunca altere o "id" de setor, serviço ou item já usado: as liberações gravadas apontam para ele.
 window.OBRA={
 "titulo": "Reforma do Grupamento do Corpo de Bombeiros — Jaboatão dos Guararapes",
 "subtitulo": "Mapa de liberação do acabamento final · Plantas baixas Casas 01-02-03 (prancha 04/23, R01)",
@@ -54,54 +55,666 @@ window.OBRA={
 {
 "id": "forro",
 "n": "Forro",
-"c": "Nivelado, sem fissuras, manchas ou emendas aparentes; recortes de luminárias e alçapões alinhados."
+"itens": [
+{
+"id": "p1",
+"et": "Pré-requisito",
+"n": "Instalações acima do forro concluídas e testadas",
+"c": "Elétrica, dados, incêndio, climatização e hidráulica acima do forro testadas e liberadas antes do fechamento.",
+"m": "Conferir as FVS e os registros de teste das instalações."
+},
+{
+"id": "p2",
+"et": "Pré-requisito",
+"n": "Cota do forro marcada",
+"c": "Cota conforme projeto (± 1 cm), marcada em todo o perímetro.",
+"m": "Nível laser ou mangueira; trena a partir do piso acabado."
+},
+{
+"id": "e1",
+"et": "Execução",
+"n": "Estrutura de sustentação",
+"c": "Tirantes a cada ≤ 1,20 m, perfis alinhados, sem apoio em tubulações ou dutos.",
+"m": "Inspeção e trena antes do fechamento; registrar foto."
+},
+{
+"id": "e2",
+"et": "Execução",
+"n": "Placas fixadas e juntas tratadas",
+"c": "Placas firmes, juntas tratadas e lixadas, sem trincas; dente entre placas ≤ 1 mm.",
+"m": "Régua de 2 m e luz rasante."
+},
+{
+"id": "e3",
+"et": "Execução",
+"n": "Recortes para luminárias, difusores e alçapões",
+"c": "Nas posições do projeto, bordas limpas, peças centralizadas e alinhadas entre si.",
+"m": "Visual e trena conforme projeto de forro e luminotécnico."
+},
+{
+"id": "n1",
+"et": "Entrega",
+"n": "Planeza e nivelamento",
+"c": "Flecha ≤ 3 mm em régua de 2 m; sem ondulações visíveis com luz rasante.",
+"m": "Régua de 2 m em duas direções; lanterna rasante."
+},
+{
+"id": "n2",
+"et": "Entrega",
+"n": "Arremate com as paredes (tabica ou negativo)",
+"c": "Encontro contínuo e reto, sem frestas.",
+"m": "Inspeção visual em todo o perímetro."
+},
+{
+"id": "qtd",
+"et": "Entrega",
+"n": "Quantidade executada x orçada",
+"c": "Quantidade executada no ambiente confere com o orçamento/medição; diferença só com justificativa registrada.",
+"m": "Medir com trena e comparar com a planilha orçamentária."
+},
+{
+"id": "acab",
+"et": "Entrega",
+"n": "Acabamento limpo e alinhado",
+"c": "Serviço sem sujeira, respingos ou peças desalinhadas.",
+"m": "Inspeção visual a 1 m, com luz natural ou rasante."
+}
+]
 },
 {
 "id": "revest",
 "n": "Revestimento cerâmico de parede",
-"w": 1,
-"c": "Sem som cavo (percussão), juntas uniformes e rejuntadas, prumo ≤ 2 mm em 2 m, recortes limpos."
+"itens": [
+{
+"id": "p1",
+"et": "Pré-requisito",
+"n": "Base (emboço) pronta e curada",
+"c": "Emboço curado (≥ 14 dias ou conforme projeto), sem som cavo; prumo ≤ 3 mm em 2 m.",
+"m": "Percussão com martelo de borracha; régua e prumo."
+},
+{
+"id": "p2",
+"et": "Pré-requisito",
+"n": "Instalações embutidas e impermeabilização concluídas",
+"c": "Pontos hidráulicos e elétricos testados e na posição do projeto; impermeabilização das áreas molhadas liberada.",
+"m": "Conferir FVS e registros de estanqueidade."
+},
+{
+"id": "p3",
+"et": "Pré-requisito",
+"n": "Material e paginação conferidos",
+"c": "Peça, lote e tonalidade conforme especificação; paginação aprovada, cortes simétricos e ≥ ½ peça nos cantos.",
+"m": "Conferir caixas (lote e tonalidade) e o projeto de paginação."
+},
+{
+"id": "e1",
+"et": "Execução",
+"n": "Assentamento com argamassa colante",
+"c": "Argamassa AC-II/AC-III conforme especificação; dupla colagem em peças > 900 cm²; ≥ 90% de cobertura no tardoz.",
+"m": "Remover 1 peça recém-assentada por pano e verificar a cobertura."
+},
+{
+"id": "e2",
+"et": "Execução",
+"n": "Juntas e alinhamento",
+"c": "Juntas uniformes (com espaçadores) e alinhadas; desvio ≤ 2 mm em 2 m.",
+"m": "Linha ou régua e trena."
+},
+{
+"id": "e3",
+"et": "Execução",
+"n": "Rejuntamento",
+"c": "Após ≥ 72 h do assentamento; juntas totalmente preenchidas, sem falhas ou fissuras; cor conforme projeto.",
+"m": "Inspeção visual peça a peça."
+},
+{
+"id": "n1",
+"et": "Entrega",
+"n": "Aderência (som cavo)",
+"c": "Nenhuma peça com som cavo; peça trincada ou lascada = NC.",
+"m": "Percussão em 100% das peças com martelo de borracha (NBR 13755)."
+},
+{
+"id": "n2",
+"et": "Entrega",
+"n": "Prumo e planeza",
+"c": "Prumo ≤ 2 mm em 2 m; dente entre peças ≤ 1 mm.",
+"m": "Régua de 2 m e prumo."
+},
+{
+"id": "n3",
+"et": "Entrega",
+"n": "Recortes, cantoneiras e encontros",
+"c": "Recortes sem trincas e cobertos por espelhos e canoplas; cantos com cantoneira ou meia-esquadria conforme projeto.",
+"m": "Inspeção visual."
+},
+{
+"id": "qtd",
+"et": "Entrega",
+"n": "Quantidade executada x orçada",
+"c": "Quantidade executada no ambiente confere com o orçamento/medição; diferença só com justificativa registrada.",
+"m": "Medir com trena e comparar com a planilha orçamentária."
+},
+{
+"id": "acab",
+"et": "Entrega",
+"n": "Acabamento limpo e alinhado",
+"c": "Serviço sem sujeira, respingos ou peças desalinhadas.",
+"m": "Inspeção visual a 1 m, com luz natural ou rasante."
+}
+],
+"w": 1
 },
 {
 "id": "piso",
 "n": "Piso e rodapé",
-"c": "Sem som cavo, juntas alinhadas, caimento para ralos (teste com água), rodapé contínuo e firme."
+"itens": [
+{
+"id": "p1",
+"et": "Pré-requisito",
+"n": "Contrapiso nivelado e curado",
+"c": "Cota e caimentos conforme projeto (áreas molhadas ≥ 0,5% para o ralo); sem som cavo nem fissuras.",
+"m": "Nível ou laser, régua de 2 m e percussão."
+},
+{
+"id": "p2",
+"et": "Pré-requisito",
+"n": "Impermeabilização testada (onde houver)",
+"c": "Lâmina d'água por 72 h sem vazamento; impermeabilização sobe ≥ 30 cm no box.",
+"m": "Conferir o registro do teste de estanqueidade."
+},
+{
+"id": "p3",
+"et": "Pré-requisito",
+"n": "Material e paginação conferidos",
+"c": "Peça, classe de abrasão (PEI), antiderrapante em áreas molhadas e rampas, lote e tonalidade conforme especificação.",
+"m": "Conferir caixas e projeto de paginação."
+},
+{
+"id": "e1",
+"et": "Execução",
+"n": "Assentamento e juntas",
+"c": "Argamassa e dupla colagem conforme o formato; juntas uniformes; juntas de movimentação conforme NBR 13753.",
+"m": "Trena e inspeção visual durante a execução."
+},
+{
+"id": "e2",
+"et": "Execução",
+"n": "Caimento para ralos (onde houver)",
+"c": "Toda a água escoa para o ralo, sem empoçamento.",
+"m": "Jogar um balde de água; após 10 min não pode haver poça."
+},
+{
+"id": "n1",
+"et": "Entrega",
+"n": "Aderência (som cavo)",
+"c": "Nenhuma peça com som cavo, trinca ou lascamento.",
+"m": "Percussão em 100% das peças."
+},
+{
+"id": "n2",
+"et": "Entrega",
+"n": "Planeza e dentes",
+"c": "Planeza ≤ 3 mm em 2 m; dente ≤ 1 mm (≤ 0,5 mm em rota acessível).",
+"m": "Régua de 2 m e calibre de folga."
+},
+{
+"id": "n3",
+"et": "Entrega",
+"n": "Rodapé",
+"c": "Altura uniforme conforme projeto, firme, alinhado, juntas coincidindo com o piso e sem frestas na parede.",
+"m": "Inspeção visual e percussão."
+},
+{
+"id": "n4",
+"et": "Entrega",
+"n": "Soleiras e transições",
+"c": "Desnível ≤ 5 mm; entre 5 e 20 mm só com chanfro 1:2 (NBR 9050); soleiras íntegras e firmes.",
+"m": "Régua e trena."
+},
+{
+"id": "qtd",
+"et": "Entrega",
+"n": "Quantidade executada x orçada",
+"c": "Quantidade executada no ambiente confere com o orçamento/medição; diferença só com justificativa registrada.",
+"m": "Medir com trena e comparar com a planilha orçamentária."
+},
+{
+"id": "acab",
+"et": "Entrega",
+"n": "Acabamento limpo e alinhado",
+"c": "Serviço sem sujeira, respingos ou peças desalinhadas.",
+"m": "Inspeção visual a 1 m, com luz natural ou rasante."
+}
+]
 },
 {
 "id": "esq",
 "n": "Portas e janelas",
-"c": "Abrem e fecham sem esforço, fechaduras e ferragens funcionando, sem infiltração, vidros íntegros."
+"itens": [
+{
+"id": "p1",
+"et": "Pré-requisito",
+"n": "Vãos conferidos",
+"c": "Dimensões e prumo dos vãos conforme projeto (± 5 mm); vergas e contravergas executadas.",
+"m": "Trena e prumo."
+},
+{
+"id": "p2",
+"et": "Pré-requisito",
+"n": "Esquadria conforme o quadro de esquadrias",
+"c": "Tipologia, dimensões, acabamento, vidro e ferragens conforme o código do projeto (PM, JA…).",
+"m": "Conferir peça a peça com o quadro de esquadrias."
+},
+{
+"id": "e1",
+"et": "Execução",
+"n": "Fixação, prumo e esquadro",
+"c": "Marcos e batentes em prumo e esquadro (≤ 2 mm em 2 m), fixados conforme o fabricante.",
+"m": "Prumo, esquadro e trena."
+},
+{
+"id": "e2",
+"et": "Execução",
+"n": "Vedação do perímetro (janelas)",
+"c": "Selante contínuo no perímetro externo, sem falhas.",
+"m": "Inspeção visual externa."
+},
+{
+"id": "n1",
+"et": "Entrega",
+"n": "Funcionamento",
+"c": "Todas as folhas abrem e fecham sem esforço e sem raspar; folga uniforme ≤ 3 mm; fechaduras, trincos e dobradiças funcionando com todas as chaves.",
+"m": "Abrir e fechar 3 vezes cada folha; testar todas as chaves."
+},
+{
+"id": "n2",
+"et": "Entrega",
+"n": "Estanqueidade (janelas)",
+"c": "Sem entrada de água pelo caixilho.",
+"m": "Jato de mangueira por 10 min na face externa."
+},
+{
+"id": "n3",
+"et": "Entrega",
+"n": "Vidros",
+"c": "Íntegros, sem riscos, lascas ou manchas; tipo e espessura conforme especificação; baguetes firmes.",
+"m": "Inspeção visual."
+},
+{
+"id": "n4",
+"et": "Entrega",
+"n": "Acessibilidade (onde houver)",
+"c": "Rota acessível: vão livre ≥ 80 cm, maçaneta de alavanca entre 0,80 e 1,10 m; puxador horizontal na porta do sanitário PNE (NBR 9050).",
+"m": "Trena."
+},
+{
+"id": "qtd",
+"et": "Entrega",
+"n": "Quantidade executada x orçada",
+"c": "Quantidade executada no ambiente confere com o orçamento/medição; diferença só com justificativa registrada.",
+"m": "Medir com trena e comparar com a planilha orçamentária."
+},
+{
+"id": "acab",
+"et": "Entrega",
+"n": "Acabamento limpo e alinhado",
+"c": "Serviço sem sujeira, respingos ou peças desalinhadas.",
+"m": "Inspeção visual a 1 m, com luz natural ou rasante."
+}
+]
 },
 {
 "id": "elet",
 "n": "Elétrica aparente e iluminação",
-"c": "Tomadas e interruptores alinhados e identificados; todos os pontos testados; luminárias fixas e acesas."
+"itens": [
+{
+"id": "p1",
+"et": "Pré-requisito",
+"n": "Circuitos testados e identificados no quadro",
+"c": "Disjuntores identificados conforme diagrama; DR nas áreas molhadas; isolamento testado.",
+"m": "Conferir o quadro e o registro de testes."
+},
+{
+"id": "e1",
+"et": "Execução",
+"n": "Tomadas e interruptores instalados",
+"c": "Alturas conforme projeto; espelhos nivelados e encostados na parede; tomadas padrão NBR 14136, identificadas quando 220 V.",
+"m": "Trena e nível."
+},
+{
+"id": "e2",
+"et": "Execução",
+"n": "Luminárias instaladas",
+"c": "Modelo e posição conforme projeto luminotécnico; firmes, alinhadas e centralizadas nos recortes.",
+"m": "Inspeção visual e trena."
+},
+{
+"id": "n1",
+"et": "Entrega",
+"n": "Teste de todas as tomadas",
+"c": "100% das tomadas com tensão correta, fase, neutro e terra.",
+"m": "Testador de tomadas ou multímetro em cada ponto."
+},
+{
+"id": "n2",
+"et": "Entrega",
+"n": "Teste de interruptores e iluminação",
+"c": "Cada interruptor comanda o ponto certo; todas as lâmpadas acendem, sem cintilação.",
+"m": "Acionar um a um."
+},
+{
+"id": "n3",
+"et": "Entrega",
+"n": "Iluminação de emergência (onde houver)",
+"c": "Acende ao faltar energia e mantém a autonomia de projeto (≥ 1 h).",
+"m": "Desligar o disjuntor do circuito e cronometrar."
+},
+{
+"id": "qtd",
+"et": "Entrega",
+"n": "Quantidade executada x orçada",
+"c": "Quantidade executada no ambiente confere com o orçamento/medição; diferença só com justificativa registrada.",
+"m": "Medir com trena e comparar com a planilha orçamentária."
+},
+{
+"id": "acab",
+"et": "Entrega",
+"n": "Acabamento limpo e alinhado",
+"c": "Serviço sem sujeira, respingos ou peças desalinhadas.",
+"m": "Inspeção visual a 1 m, com luz natural ou rasante."
+}
+]
 },
 {
 "id": "loucas",
 "n": "Louças, metais e acessórios",
-"w": 1,
-"c": "Peças fixas e vedadas; registros abrem, fecham e cortam a água por completo; descargas e sifões sem vazamento."
+"itens": [
+{
+"id": "p1",
+"et": "Pré-requisito",
+"n": "Pontos de água e esgoto testados",
+"c": "Estanqueidade testada; pontos nas alturas e posições do projeto.",
+"m": "Conferir os registros de teste e medir com trena."
+},
+{
+"id": "e1",
+"et": "Execução",
+"n": "Fixação das louças",
+"c": "Bacias, lavatórios e cubas firmes (não se movem ao forçar), nivelados, com vedação contínua na base.",
+"m": "Forçar lateralmente com a mão; nível."
+},
+{
+"id": "e2",
+"et": "Execução",
+"n": "Ligações flexíveis e sifões",
+"c": "Sem vazamento; sifões com fecho hídrico.",
+"m": "Papel seco sob as conexões após uso."
+},
+{
+"id": "n1",
+"et": "Entrega",
+"n": "Registros — acabamento e funcionamento",
+"c": "Todos os registros abrem e fecham por completo, cortam totalmente a água no ponto atendido e não vazam na haste nem na canopla.",
+"m": "Fechar o registro, abrir o ponto (não pode sair água), reabrir e conferir a vazão."
+},
+{
+"id": "n2",
+"et": "Entrega",
+"n": "Torneiras e chuveiros",
+"c": "Vazão adequada, sem respingos; sem pingar com o ponto fechado.",
+"m": "Abrir cada ponto por 1 min e observar."
+},
+{
+"id": "n3",
+"et": "Entrega",
+"n": "Descargas",
+"c": "Acionamento completo; sem fluxo contínuo para a bacia após o ciclo.",
+"m": "Acionar 3 vezes; papel seco na parede da bacia por 5 min."
+},
+{
+"id": "n4",
+"et": "Entrega",
+"n": "Ralos e escoamento",
+"c": "Escoamento livre, sem retorno de odor; grelhas firmes.",
+"m": "Jogar um balde de água em cada ralo."
+},
+{
+"id": "n5",
+"et": "Entrega",
+"n": "Acessórios",
+"c": "Papeleira, saboneteira, toalheiro, espelho e barras firmes, nivelados e nas alturas do projeto.",
+"m": "Trena e teste manual."
+},
+{
+"id": "n6",
+"et": "Entrega",
+"n": "Sanitário acessível (onde houver)",
+"c": "Barras de apoio, bacia a 0,43–0,45 m com assento e lavatório conforme NBR 9050.",
+"m": "Trena."
+},
+{
+"id": "qtd",
+"et": "Entrega",
+"n": "Quantidade executada x orçada",
+"c": "Quantidade executada no ambiente confere com o orçamento/medição; diferença só com justificativa registrada.",
+"m": "Medir com trena e comparar com a planilha orçamentária."
+},
+{
+"id": "acab",
+"et": "Entrega",
+"n": "Acabamento limpo e alinhado",
+"c": "Serviço sem sujeira, respingos ou peças desalinhadas.",
+"m": "Inspeção visual a 1 m, com luz natural ou rasante."
+}
+],
+"w": 1
 },
 {
 "id": "pint",
 "n": "Pintura",
-"c": "Cobertura uniforme, sem manchas, escorridos ou falhas; arestas limpas; cor conforme projeto."
+"itens": [
+{
+"id": "p1",
+"et": "Pré-requisito",
+"n": "Base preparada",
+"c": "Superfície seca, sem fissuras, umidade ou eflorescência; massa lixada e sem pó.",
+"m": "Luz rasante; passar a mão (não pode soltar pó)."
+},
+{
+"id": "p2",
+"et": "Pré-requisito",
+"n": "Tinta e cor conforme especificação",
+"c": "Tipo, linha e cor conforme projeto; produto dentro da validade.",
+"m": "Conferir as latas."
+},
+{
+"id": "e1",
+"et": "Execução",
+"n": "Selador ou fundo aplicado",
+"c": "Aplicado em toda a área antes da tinta.",
+"m": "Inspeção durante a execução."
+},
+{
+"id": "e2",
+"et": "Execução",
+"n": "Demãos de acabamento",
+"c": "Mínimo de 2 demãos (ou conforme fabricante), respeitando o intervalo entre demãos.",
+"m": "Acompanhar a execução."
+},
+{
+"id": "n1",
+"et": "Entrega",
+"n": "Uniformidade e cobertura",
+"c": "Sem manchas, marcas de rolo, escorridos, bolhas ou falhas.",
+"m": "Observar a 1 m com luz natural e rasante."
+},
+{
+"id": "n2",
+"et": "Entrega",
+"n": "Recortes e arestas",
+"c": "Linhas retas nos encontros com teto, rodapé, esquadrias e espelhos; sem tinta nas superfícies vizinhas.",
+"m": "Inspeção visual."
+},
+{
+"id": "qtd",
+"et": "Entrega",
+"n": "Quantidade executada x orçada",
+"c": "Quantidade executada no ambiente confere com o orçamento/medição; diferença só com justificativa registrada.",
+"m": "Medir com trena e comparar com a planilha orçamentária."
+},
+{
+"id": "acab",
+"et": "Entrega",
+"n": "Acabamento limpo e alinhado",
+"c": "Serviço sem sujeira, respingos ou peças desalinhadas.",
+"m": "Inspeção visual a 1 m, com luz natural ou rasante."
+}
+]
 },
 {
 "id": "clima",
 "n": "Climatização (onde houver)",
-"c": "Equipamento fixo e nivelado, dreno sem vazamento, funcionamento testado."
+"itens": [
+{
+"id": "p1",
+"et": "Pré-requisito",
+"n": "Infraestrutura pronta",
+"c": "Linhas frigoríficas isoladas e testadas (pressão e vácuo); dreno com caimento; ponto elétrico dedicado.",
+"m": "Conferir o registro de testes."
+},
+{
+"id": "e1",
+"et": "Execução",
+"n": "Equipamentos instalados",
+"c": "Evaporadora e condensadora firmes e niveladas, com afastamentos do fabricante; condensadora ventilada e acessível.",
+"m": "Nível e inspeção visual."
+},
+{
+"id": "n1",
+"et": "Entrega",
+"n": "Funcionamento",
+"c": "Liga, refrigera (≥ 8 °C de diferença entre retorno e insuflamento) e o controle funciona.",
+"m": "Ligar por 15 min e medir com termômetro."
+},
+{
+"id": "n2",
+"et": "Entrega",
+"n": "Dreno",
+"c": "Sem gotejamento interno; água escoando no ponto previsto.",
+"m": "Observar com o aparelho ligado."
+},
+{
+"id": "qtd",
+"et": "Entrega",
+"n": "Quantidade executada x orçada",
+"c": "Quantidade executada no ambiente confere com o orçamento/medição; diferença só com justificativa registrada.",
+"m": "Medir com trena e comparar com a planilha orçamentária."
+},
+{
+"id": "acab",
+"et": "Entrega",
+"n": "Acabamento limpo e alinhado",
+"c": "Serviço sem sujeira, respingos ou peças desalinhadas.",
+"m": "Inspeção visual a 1 m, com luz natural ou rasante."
+}
+]
 },
 {
 "id": "incendio",
 "n": "Incêndio, sinalização e CFTV (onde houver)",
-"c": "Extintores, placas e iluminação de emergência conforme projeto aprovado; câmeras operando."
+"itens": [
+{
+"id": "p1",
+"et": "Pré-requisito",
+"n": "Conforme o projeto aprovado",
+"c": "Itens instalados conforme o projeto aprovado no Corpo de Bombeiros.",
+"m": "Conferir com o projeto aprovado."
+},
+{
+"id": "e1",
+"et": "Execução",
+"n": "Extintores",
+"c": "Tipo e carga conforme projeto, selo do Inmetro e carga válidos, alça a ≤ 1,60 m do piso, sinalizados.",
+"m": "Conferir etiqueta e medir."
+},
+{
+"id": "e2",
+"et": "Execução",
+"n": "Sinalização de emergência",
+"c": "Placas fotoluminescentes de rota de fuga, saída e equipamentos nas posições do projeto.",
+"m": "Conferir com o projeto; apagar a luz e verificar a luminescência."
+},
+{
+"id": "e3",
+"et": "Execução",
+"n": "Detectores e acionadores (onde houver)",
+"c": "Instalados e testados com a central de alarme.",
+"m": "Teste funcional com a central."
+},
+{
+"id": "n1",
+"et": "Entrega",
+"n": "Câmeras de CFTV (onde houver)",
+"c": "Câmera firme, imagem nítida no gravador e ângulo conforme projeto.",
+"m": "Conferir a imagem no gravador."
+},
+{
+"id": "qtd",
+"et": "Entrega",
+"n": "Quantidade executada x orçada",
+"c": "Quantidade executada no ambiente confere com o orçamento/medição; diferença só com justificativa registrada.",
+"m": "Medir com trena e comparar com a planilha orçamentária."
+},
+{
+"id": "acab",
+"et": "Entrega",
+"n": "Acabamento limpo e alinhado",
+"c": "Serviço sem sujeira, respingos ou peças desalinhadas.",
+"m": "Inspeção visual a 1 m, com luz natural ou rasante."
+}
+]
 },
 {
 "id": "limpeza",
 "n": "Limpeza final",
-"c": "Sem resíduos, respingos de tinta ou argamassa; vidros, louças e pisos limpos."
+"itens": [
+{
+"id": "e1",
+"et": "Execução",
+"n": "Entulho e sobras removidos",
+"c": "Nenhum resíduo, embalagem ou material de obra no ambiente.",
+"m": "Inspeção visual."
+},
+{
+"id": "n1",
+"et": "Entrega",
+"n": "Pisos e revestimentos",
+"c": "Sem respingos de tinta, argamassa ou rejunte; limpeza com produto adequado ao material (sem ácido em porcelanato).",
+"m": "Inspeção visual."
+},
+{
+"id": "n2",
+"et": "Entrega",
+"n": "Vidros, esquadrias e ferragens",
+"c": "Sem etiquetas, fitas, respingos ou marcas.",
+"m": "Inspeção visual."
+},
+{
+"id": "n3",
+"et": "Entrega",
+"n": "Louças, metais e luminárias",
+"c": "Limpos, sem resíduos de silicone ou poeira.",
+"m": "Inspeção visual."
+},
+{
+"id": "n4",
+"et": "Entrega",
+"n": "Ambiente pronto para uso",
+"c": "Pode ser entregue sem nova limpeza.",
+"m": "Inspeção final com o responsável da empreiteira."
+}
+]
 }
 ],
 "setores": [
