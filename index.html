@@ -12,9 +12,8 @@
    PICTURE: planta real ao centro, ambientes coloridos por situação
    COLOUR and TYPE: superfície neutra, tinta escura, azul FVS só em ação; verde C, vermelho NC, cinza NA, âmbar pendente; Archivo
    LAYOUT: NCs e setores à esquerda, mapa ao centro, ficha do ambiente à direita; no celular: mapa, ficha, NCs */
-:root{color-scheme:light dark;--bg:light-dark(#eef0f3,#0f1113);--panel:light-dark(#fff,#181b1f);--ink:light-dark(#151a21,#e8ebf0);--mute:light-dark(#5d6674,#97a0ad);--line:light-dark(#dfe3e8,#2a2f36);--soft:light-dark(#f6f7f9,#1e2227);
+:root{color-scheme:light;--bg:light-dark(#eef0f3,#0f1113);--panel:light-dark(#fff,#181b1f);--ink:light-dark(#151a21,#e8ebf0);--mute:light-dark(#5d6674,#97a0ad);--line:light-dark(#dfe3e8,#2a2f36);--soft:light-dark(#f6f7f9,#1e2227);
 --acc:light-dark(#1F3864,#9db8ea);--accb:light-dark(#1F3864,#2f5597);--c:#2e7d32;--nc:#c62828;--na:#8d939b;--pend:#d99a00;--ini:#a3b1c2}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Archivo,system-ui,sans-serif;overflow-x:clip}
 button,select,input,textarea{font:inherit}
@@ -25,7 +24,12 @@ button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-vis
 select,textarea,input[type=text],input[type=email],input[type=password]{font-size:16px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
 .meta{color:var(--mute);font-size:13px}
 /* topo */
-header{background:var(--panel);border-bottom:1px solid var(--line);padding:16px max(2vw,14px) 12px}
+header{background:linear-gradient(90deg,#1F3864 0 78%,#2f5597 78% 92%,#c8102e 92%) top/100% 5px no-repeat,#fff;border-bottom:1px solid var(--line);padding:18px max(2vw,14px) 12px}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{flex:none;width:44px;height:44px;border-radius:10px;background:#1F3864;display:grid;place-items:center}
+header h1{color:#1F3864}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font-size:12px;border:1px solid #c9d3e6;background:#eef3fb;color:#1F3864;border-radius:99px;padding:1px 9px;white-space:nowrap}
 .top{display:flex;gap:12px 24px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
 header h1{margin:0;font-size:clamp(19px,2vw,24px);line-height:1.15;font-weight:700;text-wrap:balance}
 header p{margin:3px 0 0}
@@ -33,7 +37,8 @@ header p{margin:3px 0 0}
 .auth[hidden],#loginbox[hidden],#senhabox[hidden]{display:none}
 #loginbox,#senhabox{display:grid;gap:6px;width:100%;background:var(--soft);border:1px solid var(--line);padding:10px;border-radius:10px}
 .kpis{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.kpi{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;min-width:150px}
+.kpi{background:#fff;border:1px solid var(--line);border-left:4px solid #1F3864;border-radius:10px;padding:8px 14px;min-width:150px}
+.kpi.ok{border-left-color:var(--c)}.kpi.bad{border-left-color:var(--nc)}.kpi.pd{border-left-color:var(--pend)}
 .kpi b{display:block;font-size:22px;line-height:1.15}.kpi span{font-size:12.5px;color:var(--mute)}
 .kpi.bad b{color:var(--nc)}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px max(2vw,14px);background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
@@ -48,15 +53,19 @@ main{display:grid;grid-template-columns:300px minmax(0,1fr) 430px;grid-template-
 .mapwrap{grid-area:map;position:sticky;top:57px;height:calc(100vh - 57px);min-height:420px;background:light-dark(#fff,#0c0e10);border-inline:1px solid var(--line)}
 aside{grid-area:side;background:var(--panel);min-height:calc(100vh - 57px)}
 @media(min-width:1251px){#left{position:sticky;top:57px;max-height:calc(100vh - 57px);overflow:auto}}
-@media(max-width:1250px){main{grid-template-columns:minmax(0,1fr) 410px;grid-template-areas:"map side" "left left"}#left{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start}}
-@media(max-width:900px){main{grid-template-columns:1fr;grid-template-areas:"map" "side" "left"}.mapwrap{position:relative;top:0;height:60vh;border-inline:0;border-bottom:1px solid var(--line)}aside{min-height:0}.bar{position:static}}
+@media(max-width:1250px){main,main.hl{grid-template-columns:minmax(0,1fr) 410px;grid-template-areas:"map side" "left left"}main.hr,main.hl.hr{grid-template-columns:minmax(0,1fr);grid-template-areas:"map" "left"}#togL{display:none}main.hl #left{display:grid}#left{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start}}
+@media(max-width:900px){main,main.hl,main.hr,main.hl.hr{grid-template-columns:1fr;grid-template-areas:"map" "side" "left"}.tog{display:none}main.hr aside{display:block}.zoom{right:12px}.mapwrap{position:relative;top:0;height:60vh;border-inline:0;border-bottom:1px solid var(--line)}aside{min-height:0}.bar{position:static}}
 #map{width:100%;height:100%;touch-action:none;cursor:grab;display:block}#map.drag{cursor:grabbing}
-#map image{filter:var(--imgf,none)}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--imgf:invert(.9) hue-rotate(180deg)}}
-:root[data-theme=dark]{--imgf:invert(.9) hue-rotate(180deg)}
 .sec{cursor:pointer;stroke-width:1.2;fill-opacity:.42;transition:fill-opacity .15s}.sec:hover{fill-opacity:.62}
 .sec.sel{stroke:var(--ink);stroke-width:3;fill-opacity:.62}.pin{stroke:#fff;stroke-width:2.5}
-.zoom{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px}
+.tog{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:28px;height:64px;border:1px solid var(--line);background:#fff;color:#1F3864;cursor:pointer;display:grid;place-items:center;box-shadow:0 1px 4px #0002}
+.tog svg{transition:transform .15s}#togL{left:0;border-left:0;border-radius:0 10px 10px 0}#togR{right:0;border-right:0;border-radius:10px 0 0 10px}
+main.hl #togL svg,main.hr #togR svg{transform:rotate(180deg)}
+main.hl #left,main.hr aside{display:none}
+main.hl{grid-template-columns:minmax(0,1fr) 430px;grid-template-areas:"map side"}
+main.hr{grid-template-columns:300px minmax(0,1fr);grid-template-areas:"left map"}
+main.hl.hr{grid-template-columns:minmax(0,1fr);grid-template-areas:"map"}
+.zoom{position:absolute;right:40px;top:12px;display:flex;flex-direction:column;gap:6px}
 .zoom button{width:44px;height:44px;font-size:20px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;box-shadow:0 1px 4px #0002}
 .hint{position:absolute;left:12px;bottom:12px;background:var(--panel);padding:5px 9px;border-radius:8px;border:1px solid var(--line)}
 .legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;color:var(--mute)}
@@ -149,7 +158,8 @@ h3{font-size:13px;color:var(--mute);margin:16px 18px 8px;font-weight:600}
 </head>
 <body>
 <header>
-  <div class="top"><div><h1 id="ttl"></h1><p id="sub" class="meta"></p></div>
+  <div class="top"><div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" d="M3 4h18v16H3zM3 11h8v9M11 4v4M15 11h6M15 11v9"/><circle cx="18" cy="16" r="1.6" fill="#ff6b6b"/></svg></div>
+  <div><h1 id="ttl"></h1><div class="chips" id="sub"></div></div></div>
   <div id="auth" class="auth" hidden><span id="authtxt">Somente leitura</span><button class="btn" id="login">Entrar</button><button class="btn" id="defsenha" hidden>Definir senha</button><button class="btn" id="logout" hidden>Sair</button>
   <form id="loginbox" hidden><label for="email">E-mail</label><input type="email" id="email" autocomplete="email" required>
   <label for="senha">Senha</label><input type="password" id="senha" autocomplete="current-password">
@@ -167,12 +177,14 @@ h3{font-size:13px;color:var(--mute);margin:16px 18px 8px;font-weight:600}
   <label for="mode" class="meta">Colorir por</label>
   <select id="mode"></select>
 </div>
-<main>
+<main id="main">
   <div id="left">
     <section class="card" id="nccard"></section>
     <details class="card" id="setcard"></details>
   </div>
   <div class="mapwrap">
+    <button class="tog" id="togL" aria-label="Ocultar painel de não conformidades" title="Ocultar/mostrar painel"><svg viewBox="0 0 10 16" width="10" height="16" aria-hidden="true"><path d="M8 2 2 8l6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></button>
+    <button class="tog" id="togR" aria-label="Ocultar ficha do ambiente" title="Ocultar/mostrar painel"><svg viewBox="0 0 10 16" width="10" height="16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></button>
     <svg id="map" aria-label="Planta baixa interativa"></svg>
     <div class="zoom"><button id="zin" aria-label="Aproximar">+</button><button id="zout" aria-label="Afastar">−</button><button id="zfit" aria-label="Enquadrar">⤢</button></div>
     <div class="hint" id="legend"></div>
@@ -183,9 +195,9 @@ h3{font-size:13px;color:var(--mute);margin:16px 18px 8px;font-weight:600}
 <button class="btn" id="lbprev" aria-label="Foto anterior">‹</button><button class="btn" id="lbnext" aria-label="Próxima foto">›</button><a class="btn" id="lbopen" target="_blank" rel="noopener">Abrir original</a><button class="btn del" id="lbdel" hidden>Excluir foto</button><button class="btn pri" id="lbclose">Fechar</button></div></div></div>
 <input type="file" id="file" accept="image/*" hidden>
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
-<script src="config.js"></script>
+<script src="config.js?v=202611270805"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="dados.js"></script>
-<script src="app.js"></script>
+<script src="dados.js?v=202611270805"></script>
+<script src="app.js?v=202611270805"></script>
 </body>
 </html>

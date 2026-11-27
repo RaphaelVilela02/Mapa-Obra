@@ -15,7 +15,7 @@ const fmt=ms=>ms?new Date(ms).toLocaleString('pt-BR',{day:'2-digit',month:'2-dig
 const $=id=>document.getElementById(id);
 const svcName=id=>svcById[id]?.n||'';
 const label=(v,i)=>v?(svcName(v)+(i&&itemOf(v,i)?' › '+itemOf(v,i).n:'')):'Ambiente em geral';
-document.title=O.tituloCurto||'Mapa da Obra';$('ttl').textContent=O.titulo;$('sub').textContent=O.subtitulo;
+document.title=O.tituloCurto||'Mapa da Obra';$('ttl').textContent=O.titulo;$('sub').innerHTML=(O.etiquetas||[O.subtitulo]).map(x=>`<span class="chip">${esc(x)}</span>`).join('');
 
 let LIB={},CMS=[],canWrite=false,names={};
 let view=VIEWS[0].id,sel=null,mode='geral',vb=null,pendFile=null,pendUrl='',draft={t:'',v:'',i:''},pf='',pAll=false,LB=null,open=new Set();
@@ -44,7 +44,7 @@ const openNCs=()=>Object.values(LIB).filter(r=>r.st==='NC'&&byId[r.s]&&itemOf(r.
 // ---------- desenho ----------
 function renderKpis(){
   let lib=0,nc=0,t=0,ok=0;for(const s of SECTORS){const i=info(s);if(i.sit==='lib')lib++;nc+=i.nc;t+=i.t;ok+=i.c+i.na}
-  $('kpis').innerHTML=[[`${lib} de ${SECTORS.length}`,'ambientes liberados',''],[Math.round(ok/t*100)+'%','dos itens liberados (C + NA)',''],[nc,'não conformidades abertas',nc?'bad':''],[t-ok-nc,'itens pendentes','']]
+  $('kpis').innerHTML=[[`${lib} de ${SECTORS.length}`,'ambientes liberados','ok'],[Math.round(ok/t*100)+'%','dos itens liberados (C + NA)',''],[nc,'não conformidades abertas',nc?'bad':''],[t-ok-nc,'itens pendentes','pd']]
     .map(([b,s,c])=>`<div class="kpi ${c}"><b>${b}</b><span>${s}</span></div>`).join('');
 }
 function renderTabs(){$('tabs').innerHTML=VIEWS.map(v=>`<button data-v="${v.id}" aria-pressed="${v.id===view}">${esc(v.n)}</button>`).join('')}
@@ -159,7 +159,7 @@ $('left').addEventListener('click',e=>{
   const b=e.target.closest('.setl [data-id]');if(b)select(b.dataset.id,true)});
 function goItem(s,v,i){select(s,false);open.add(v);renderSide();
   const el=$('it-'+v+'-'+i);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('flash')}}
-function select(id,scroll){if(id!==sel){draft={t:'',v:'',i:''};clearPhoto();pf='';pAll=false;open=new Set()}sel=id;const s=byId[id];if(s.v!==view){view=s.v;vb=null}renderAll();
+function select(id,scroll){if(PN.r){PN.r=false;applyPN()}if(id!==sel){draft={t:'',v:'',i:''};clearPhoto();pf='';pAll=false;open=new Set()}sel=id;const s=byId[id];if(s.v!==view){view=s.v;vb=null}renderAll();
   try{history.replaceState(null,'','#'+id)}catch(e){}
   if(scroll)(matchMedia('(max-width:900px)').matches?$('side'):document.body).scrollIntoView({behavior:'smooth'})}
 $('side').addEventListener('click',e=>{
@@ -300,6 +300,12 @@ const SupaAPI={textNames:true,canUpload:true,canDelete:true,
   photoUrl(f){if(!f||!this.sb)return'';const u=this.sb.storage.from('fotos').getPublicUrl(f).data.publicUrl;return /^https:\/\//.test(u)?u:''}};
 
 const API=(window.SUPABASE_CONFIG&&window.supabase)?SupaAPI:ClaudeAPI;
+// ocultar/mostrar painéis
+const MN=$('main');let PN={};try{PN=JSON.parse(localStorage.getItem('paineis')||'{}')||{}}catch(e){}
+function applyPN(){MN.classList.toggle('hl',!!PN.l);MN.classList.toggle('hr',!!PN.r);
+  $('togL').setAttribute('aria-label',PN.l?'Mostrar painel de não conformidades':'Ocultar painel de não conformidades');
+  $('togR').setAttribute('aria-label',PN.r?'Mostrar ficha do ambiente':'Ocultar ficha do ambiente');try{localStorage.setItem('paineis',JSON.stringify(PN))}catch(e){}}
+$('togL').onclick=()=>{PN.l=!PN.l;applyPN()};$('togR').onclick=()=>{PN.r=!PN.r;applyPN()};applyPN();
 renderMode();renderAll();
 API.start().catch(e=>{console.error(e);banner('Erro ao conectar ao banco de dados.')});
 }

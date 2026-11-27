@@ -3,6 +3,7 @@
 // Nunca altere o "id" de setor, serviço ou item já usado: as liberações gravadas apontam para ele.
 window.OBRA={
 "titulo": "Reforma do Grupamento do Corpo de Bombeiros — Jaboatão dos Guararapes",
+"etiquetas":["Acabamento final","Casas 01 · 02 · 03","Prancha 04/23 · R01","CBMPE · SEPE"],
 "subtitulo": "Mapa de liberação do acabamento final · Plantas baixas Casas 01-02-03 (prancha 04/23, R01)",
 "plantas": [
 {
